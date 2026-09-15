@@ -1,14 +1,21 @@
 /* קטלוג הרכבים של המוסך + מנוע ציור: כל רכב מצויר כ-SVG לפי סוג מרכב וצבע */
 
 const CARS = [
-  { id: "toyota",  name: "טויוטה", type: "hatch", color: "#e8443b", price: 0 },
-  { id: "mazda",   name: "מאזדה",  type: "sedan", color: "#2f6fd0", price: 3 },
-  { id: "hyundai", name: "יונדאי", type: "suv",   color: "#cdd3db", price: 6 },
-  { id: "skoda",   name: "סקודה",  type: "wagon", color: "#2f9e63", price: 9 },
-  { id: "geely",   name: "ג'ילי",  type: "sedan", color: "#f2921d", price: 12 },
-  { id: "byd",     name: "BYD",    type: "sport", color: "#19bcd0", price: 16 },
-  { id: "jeep",    name: "ג'יפ",   type: "jeep",  color: "#7d8b46", price: 20 },
+  { id: "toyota",  name: "טויוטה", type: "hatch",  color: "#e8443b", price: 0 },
+  { id: "mazda",   name: "מאזדה",  type: "sedan",  color: "#2f6fd0", price: 3 },
+  { id: "kia",     name: "קיה",    type: "hatch",  color: "#9b6ede", price: 5 },
+  { id: "hyundai", name: "יונדאי", type: "suv",    color: "#cdd3db", price: 7 },
+  { id: "skoda",   name: "סקודה",  type: "wagon",  color: "#2f9e63", price: 9 },
+  { id: "geely",   name: "ג'ילי",  type: "sedan",  color: "#f2921d", price: 12 },
+  { id: "nissan",  name: "ניסאן",  type: "suv",    color: "#24486f", price: 14 },
+  { id: "byd",     name: "BYD",    type: "sport",  color: "#19bcd0", price: 16 },
+  { id: "ford",    name: "פורד",   type: "pickup", color: "#1f7a8c", price: 18 },
+  { id: "jeep",    name: "ג'יפ",   type: "jeep",   color: "#7d8b46", price: 20 },
+  { id: "tesla",   name: "טסלה",   type: "sport",  color: "#f4f6f8", price: 22 },
   { id: "racer",   name: "מכונית מרוץ", type: "sport", color: "#ffd21e", price: 25 },
+  { id: "bus",     name: "אוטובוס", type: "van",   color: "#f2b807", price: 28 },
+  { id: "truck",   name: "משאית",  type: "truck",  color: "#d95252", price: 32 },
+  { id: "monster", name: "מפלצת",  type: "monster", color: "#7b3fbf", price: 40 },
 ];
 
 /* מידות המרכב לכל סוג רכב (במערכת קואורדינטות 360x190) */
@@ -19,6 +26,10 @@ const BODY_SPECS = {
   wagon: { bodyTop: 94, bodyLeft: 36, bodyRight: 324, cabinLeft: 86, cabinRight: 284, roofY: 48, slant: 24, wheelR: 23, wheels: [102, 264] },
   jeep:  { bodyTop: 84, bodyLeft: 44, bodyRight: 318, cabinLeft: 84, cabinRight: 276, roofY: 38, slant: 12, wheelR: 29, wheels: [106, 258] },
   sport: { bodyTop: 104, bodyLeft: 30, bodyRight: 330, cabinLeft: 112, cabinRight: 238, roofY: 70, slant: 34, wheelR: 22, wheels: [100, 264] },
+  pickup: { bodyTop: 92, bodyLeft: 36, bodyRight: 326, cabinLeft: 74, cabinRight: 188, roofY: 44, slant: 20, wheelR: 26, wheels: [102, 262] },
+  van:   { bodyTop: 74, bodyLeft: 40, bodyRight: 322, cabinLeft: 54, cabinRight: 306, roofY: 34, slant: 14, wheelR: 25, wheels: [100, 264] },
+  truck: { bodyTop: 96, bodyLeft: 34, bodyRight: 328, cabinLeft: 56, cabinRight: 150, roofY: 44, slant: 14, wheelR: 26, wheels: [96, 268] },
+  monster: { bodyTop: 70, bodyLeft: 58, bodyRight: 306, cabinLeft: 92, cabinRight: 268, roofY: 26, slant: 14, wheelR: 38, wheels: [110, 254] },
 };
 
 function shade(hex, amount) {
@@ -65,8 +76,28 @@ function carSvg(car, opts = {}) {
     .join("");
 
   const roofRack =
-    car.type === "jeep"
+    car.type === "jeep" || car.type === "monster"
       ? `<rect x="${s.cabinLeft + 6}" y="${s.roofY - 9}" width="${s.cabinRight - s.cabinLeft - 12}" height="7" rx="3.5" fill="${dark}"/>`
+      : "";
+
+  const bed =
+    car.type === "pickup"
+      ? `<rect x="196" y="${s.bodyTop - 26}" width="126" height="30" rx="8" fill="${dark}" opacity="0.9"/>
+         <rect x="204" y="${s.bodyTop - 20}" width="110" height="18" rx="6" fill="#00000033"/>`
+      : "";
+
+  const cargo =
+    car.type === "truck"
+      ? `<rect x="158" y="34" width="172" height="${s.bodyTop - 32}" rx="10" fill="${light}" stroke="${dark}" stroke-width="3"/>
+         <rect x="176" y="52" width="136" height="14" rx="7" fill="${car.color}" opacity="0.8"/>
+         <rect x="176" y="76" width="136" height="14" rx="7" fill="${car.color}" opacity="0.6"/>`
+      : "";
+
+  const busWindows =
+    car.type === "van"
+      ? Array.from({ length: 4 }, (_, i) =>
+          `<rect x="${86 + i * 56}" y="${s.roofY + 12}" width="42" height="26" rx="6" fill="${glass}"/>`
+        ).join("")
       : "";
 
   const spoiler =
@@ -77,15 +108,18 @@ function carSvg(car, opts = {}) {
   return `
   <svg viewBox="0 0 360 190" class="car-svg" xmlns="http://www.w3.org/2000/svg">
     <ellipse cx="180" cy="171" rx="142" ry="10" fill="#00000022"/>
-    ${roofRack}${spoiler}
+    ${roofRack}${spoiler}${cargo}
     <path d="${cabin}" fill="${car.color}" stroke="${dark}" stroke-width="3" stroke-linejoin="round"/>
-    <path d="${frontWin}" fill="${glass}" opacity="0.95"/>
-    <path d="${rearWin}" fill="${glass}" opacity="0.95"/>
-    <path d="${frontWin}" fill="#ffffff" opacity="0.35"/>
+    ${car.type === "van"
+      ? busWindows
+      : `<path d="${frontWin}" fill="${glass}" opacity="0.95"/>
+         <path d="${rearWin}" fill="${glass}" opacity="0.95"/>
+         <path d="${frontWin}" fill="#ffffff" opacity="0.35"/>`}
     <rect x="${s.bodyLeft}" y="${s.bodyTop}" width="${s.bodyRight - s.bodyLeft}" height="${bodyBottom - s.bodyTop + 6}"
           rx="${car.type === "jeep" ? 12 : 22}" fill="${car.color}" stroke="${dark}" stroke-width="3"/>
     <rect x="${s.bodyLeft + 10}" y="${s.bodyTop + 6}" width="${s.bodyRight - s.bodyLeft - 20}" height="9" rx="4.5" fill="${light}" opacity="0.7"/>
     <rect x="${s.bodyLeft}" y="${bodyBottom - 10}" width="${s.bodyRight - s.bodyLeft}" height="14" rx="7" fill="${dark}" opacity="0.65"/>
+    ${bed}
     <rect x="${s.bodyLeft + 4}" y="${s.bodyTop + 26}" width="18" height="12" rx="6" fill="#fff4c2"/>
     <rect x="${s.bodyRight - 22}" y="${s.bodyTop + 26}" width="18" height="12" rx="6" fill="#ffc9c9"/>
     <rect x="${(s.cabinLeft + s.cabinRight) / 2 - 4}" y="${s.bodyTop + 4}" width="8" height="10" rx="4" fill="${dark}"/>

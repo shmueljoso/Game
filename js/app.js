@@ -5,14 +5,21 @@ const STORAGE_KEY = "kidsGameProfile";
 const GAMES = {};
 
 const WORLDS = [
-  { id: "zoo",     label: "גן החיות",   emoji: "🦁", color: "#8fd98c", roof: "#3f9a58", style: "arch",   x: 120, y: 262 },
-  { id: "fire",    label: "תחנת כבאות", emoji: "🚒", color: "#ff9a9a", roof: "#d14343", style: "tower",  x: 368, y: 252 },
-  { id: "rescue",  label: "בית חולים",  emoji: "🚑", color: "#fdfdff", roof: "#ff7b7b", style: "flat",   x: 636, y: 248 },
-  { id: "shapes",  label: "אתר בנייה",  emoji: "🏗️", color: "#ffc98b", roof: "#c97b2e", style: "site",   x: 880, y: 256 },
-  { id: "carwash", label: "שטיפת רכב",  emoji: "🚗", color: "#7ec8ff", roof: "#3d7fe0", style: "wash",   x: 150, y: 458 },
-  { id: "garage",  label: "המוסך",      emoji: "🔧", color: "#ffd98a", roof: "#b98330", style: "garage", x: 398, y: 462 },
-  { id: "traffic", label: "הצומת",      emoji: "🚦", color: "#cdb8ff", roof: "#7b5fd6", style: "flat",   x: 640, y: 458 },
-  { id: "race",    label: "מסלול מרוץ", emoji: "🏁", color: "#ffd36b", roof: "#e8a020", style: "stand",  x: 886, y: 454 },
+  /* אזור א - עיר הרכבים */
+  { id: "fire",    label: "תחנת כבאות", emoji: "🚒", color: "#ff9a9a", roof: "#d14343", style: "tower",  x: 180,  y: 252 },
+  { id: "rescue",  label: "בית חולים",  emoji: "🚑", color: "#fdfdff", roof: "#ff7b7b", style: "flat",   x: 500,  y: 248 },
+  { id: "traffic", label: "הצומת",      emoji: "🚦", color: "#cdb8ff", roof: "#7b5fd6", style: "flat",   x: 820,  y: 250 },
+  { id: "carwash", label: "שטיפת רכב",  emoji: "🚗", color: "#7ec8ff", roof: "#3d7fe0", style: "wash",   x: 180,  y: 458 },
+  { id: "garage",  label: "המוסך",      emoji: "🔧", color: "#ffd98a", roof: "#b98330", style: "garage", x: 500,  y: 462 },
+  { id: "race",    label: "מסלול מרוץ", emoji: "🏁", color: "#ffd36b", roof: "#e8a020", style: "stand",  x: 820,  y: 454 },
+
+  /* אזור ב - הפארק */
+  { id: "zoo",      label: "גן החיות",   emoji: "🦁", color: "#8fd98c", roof: "#3f9a58", style: "arch",    x: 1180, y: 262 },
+  { id: "market",   label: "סופרמרקט",   emoji: "🛒", color: "#ffd0e0", roof: "#e0568a", style: "shop",    x: 1500, y: 254 },
+  { id: "music",    label: "תזמורת",     emoji: "🥁", color: "#b9a6ff", roof: "#6b4fd0", style: "theater", x: 1820, y: 252 },
+  { id: "shapes",   label: "אתר בנייה",  emoji: "🏗️", color: "#ffc98b", roof: "#c97b2e", style: "site",    x: 1180, y: 456 },
+  { id: "delivery", label: "משלוחים",    emoji: "📦", color: "#a8d8ff", roof: "#3f7bbf", style: "depot",   x: 1500, y: 458 },
+  { id: "puzzle",   label: "פאזל",       emoji: "🧩", color: "#ffe08a", roof: "#e08a2e", style: "toy",     x: 1820, y: 458 },
 ];
 
 const COINS_PER_WIN = 3;
