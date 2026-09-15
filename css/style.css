@@ -226,6 +226,8 @@ html, body {
 
 .road-car {
   offset-rotate: auto;
+  /* האמוג'י פונה שמאלה מטבעו - משקפים אותו כדי שייסע קדימה לאורך הכביש */
+  transform: scaleX(-1);
   animation: driveRoad 16s linear infinite;
 }
 @keyframes driveRoad {
@@ -652,10 +654,15 @@ html, body {
 }
 .flame.out { opacity: 0; transform: translate(-50%, -50%) scale(0.2); animation: none; }
 
-.fire-truck { position: absolute; left: 6%; bottom: 8%; font-size: calc(var(--u) * 13); z-index: 5; animation: truckIn 1s ease-out; }
+.fire-truck {
+  position: absolute; left: 6%; bottom: 8%;
+  font-size: calc(var(--u) * 13); z-index: 5;
+  transform: scaleX(-1);
+  animation: truckIn 1s ease-out;
+}
 @keyframes truckIn {
-  from { transform: translateX(-140%); }
-  to { transform: translateX(0); }
+  from { transform: translateX(-140%) scaleX(-1); }
+  to { transform: translateX(0) scaleX(-1); }
 }
 
 .water-jet {
@@ -857,10 +864,15 @@ html, body {
 /* ===== אמבולנס ===== */
 .rc-room { position: absolute; inset: 0 0 24% 0; background: linear-gradient(#e8f4ff, #d3e9ff); }
 .rc-floor { position: absolute; inset: 76% 0 0 0; background: linear-gradient(#f0d9bd, #dcc2a1); }
-.rc-ambulance { position: absolute; top: 12%; right: 3%; font-size: calc(var(--u) * 12); animation: ambIn 1.2s ease-out; }
+.rc-ambulance {
+  position: absolute; top: 12%; right: 3%;
+  font-size: calc(var(--u) * 12);
+  transform: scaleX(-1);
+  animation: ambIn 1.2s ease-out;
+}
 @keyframes ambIn {
-  from { transform: translateX(-160%); }
-  to { transform: translateX(0); }
+  from { transform: translateX(-160%) scaleX(-1); }
+  to { transform: translateX(0) scaleX(-1); }
 }
 
 .patient {
@@ -1232,7 +1244,12 @@ html, body {
 }
 .dl-house.shake { animation: wrongShake 0.4s ease; }
 .dl-house.got-mail { animation: correctJump 0.7s ease; }
-.dl-truck { position: absolute; bottom: 6%; left: 3%; font-size: calc(var(--u) * 13); z-index: 4; animation: truckIn 1s ease-out; }
+.dl-truck {
+  position: absolute; bottom: 17%; left: 4%;
+  font-size: calc(var(--u) * 13); z-index: 4;
+  transform: scaleX(-1);
+  animation: truckIn 1s ease-out;
+}
 
 .parcel-slot { position: absolute; inset: 0; }
 .parcel {

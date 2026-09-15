@@ -47,7 +47,7 @@ GAMES.rescue = {
 
     for (let i = 0; i < 4; i++) {
       const plaster = el("span", "plaster", "🩹");
-      plaster.style.left = 18 + i * 21 + "%";
+      plaster.style.left = 27 + i * 18 + "%";
       plaster.style.top = "90%";
       root.appendChild(plaster);
       makeDraggable(plaster, root, (node, x, y) => this.drop(node, x, y));
