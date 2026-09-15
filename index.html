@@ -3,107 +3,89 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
-  <title>עולם המשחקים הקטן</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎈</text></svg>" />
+  <title>העיר הקטנה - משחקים לילדים</title>
+  <meta name="theme-color" content="#ffe9d6" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏙️</text></svg>" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
-  <!-- מסך בחירת דמות מלווה -->
+  <!-- מסך 1: בחירת דמות מלווה -->
   <section id="screen-select" class="screen">
-    <div class="select-wrap">
-      <h1 class="title">מי יהיה החבר שלך? 🌟</h1>
+    <div class="center-wrap">
+      <h1 class="title">מי יהיה החבר שלך?</h1>
       <p class="subtitle">בחרו חבר שילווה אתכם בכל המשחקים</p>
       <div class="companion-grid" id="companionGrid"></div>
     </div>
   </section>
 
-  <!-- מסך בית -->
-  <section id="screen-home" class="screen hidden">
-    <header class="home-header">
-      <button class="mascot-btn" id="mascotBtn" aria-label="החלף חבר">
-        <span class="mascot-avatar" id="homeMascot"></span>
-      </button>
-      <h1 class="title">בואו נשחק! 🎈</h1>
-    </header>
-
-    <div class="world-grid" id="worldGrid">
-      <button class="world-card" data-game="carwash">
-        <span class="world-emoji">🚗🧽</span>
-        <span class="world-name">שטיפת מכונית</span>
-      </button>
-      <button class="world-card" data-game="race">
-        <span class="world-emoji">🏁</span>
-        <span class="world-name">מרוץ מכוניות</span>
-      </button>
-      <button class="world-card locked" disabled>
-        <span class="world-emoji">🚒</span>
-        <span class="world-name">בקרוב...</span>
-      </button>
-      <button class="world-card locked" disabled>
-        <span class="world-emoji">🐾</span>
-        <span class="world-name">בקרוב...</span>
-      </button>
+  <!-- מסך 2: שם הילד (אפשר לדלג) -->
+  <section id="screen-name" class="screen hidden">
+    <div class="center-wrap">
+      <span class="mascot-avatar big" id="nameMascot"></span>
+      <h1 class="title">מי משחק היום?</h1>
+      <input class="name-input" id="nameInput" type="text" maxlength="12" placeholder="השם שלי..." />
+      <button class="btn-primary wide" id="nameGo">בואו נשחק! 🎉</button>
+      <button class="btn-text" id="nameSkip">דלגו</button>
     </div>
   </section>
 
-  <!-- מסך משחק: שטיפת מכונית -->
-  <section id="screen-carwash" class="screen hidden">
-    <header class="game-header">
-      <button class="back-btn" data-back>⬅ חזרה</button>
-      <span class="game-title">שטיפת מכונית 🧽</span>
-      <span class="mascot-avatar small" id="carwashMascot"></span>
-    </header>
-    <div class="game-stage" id="carwashStage">
-      <div class="stars-row" id="carwashProgress"></div>
-      <div class="car-scene" id="carScene">
-        <!-- car + dirt injected by JS -->
-      </div>
-      <div class="sponge" id="sponge">🧽</div>
+  <!-- מסך 3: מפת העיר -->
+  <section id="screen-city" class="screen hidden">
+    <div class="topbar">
+      <button class="profile-chip" id="profileBtn">
+        <span class="mascot-avatar small" id="cityMascot"></span>
+        <span class="chip-text"><span id="playerName">שלום!</span></span>
+        <span class="chip-stars">⭐ <span id="starCount">0</span></span>
+      </button>
+      <h1 class="city-title" id="cityTitle">העיר הקטנה</h1>
+      <button class="icon-btn" id="musicBtn" aria-label="מוזיקה">🎵</button>
     </div>
-    <div class="win-overlay hidden" id="carwashWin">
-      <div class="win-card">
-        <div class="win-mascot" id="carwashWinMascot"></div>
-        <h2>יופי! המכונית נוצצת! ✨</h2>
-        <button class="btn-primary" data-replay="carwash">לשחק שוב</button>
-        <button class="btn-secondary" data-back>לתפריט</button>
+    <div class="stage-wrap">
+      <div class="stage" id="cityStage"></div>
+    </div>
+    <div class="rotate-hint">📱 סובבו את הטלפון כדי לשחק בגדול</div>
+  </section>
+
+  <!-- מסך 4: משחק -->
+  <section id="screen-game" class="screen hidden">
+    <div class="topbar">
+      <button class="icon-btn" id="backBtn" aria-label="חזרה">⬅</button>
+      <h1 class="city-title" id="gameTitle"></h1>
+      <div class="topbar-side">
+        <span class="hint" id="gameHint"></span>
+        <span class="mascot-avatar small" id="gameMascot"></span>
       </div>
+    </div>
+    <div class="stage-wrap">
+      <div class="stage"><div id="gameRoot"></div></div>
     </div>
   </section>
 
-  <!-- מסך משחק: מרוץ מכוניות -->
-  <section id="screen-race" class="screen hidden">
-    <header class="game-header">
-      <button class="back-btn" data-back>⬅ חזרה</button>
-      <span class="game-title">מרוץ מכוניות 🏁</span>
-      <span class="mascot-avatar small" id="raceMascot"></span>
-    </header>
-    <div class="game-stage" id="raceStage">
-      <div class="track" id="trackPlayer">
-        <div class="finish-flag">🏁</div>
-        <div class="race-car player-car" id="playerCar">🚗</div>
-      </div>
-      <div class="track" id="trackCpu">
-        <div class="finish-flag">🏁</div>
-        <div class="race-car cpu-car" id="cpuCar">🚓</div>
-      </div>
-      <button class="tap-btn" id="tapBtn">לחצו מהר! 👆</button>
+  <!-- שכבת ניצחון -->
+  <div class="win-overlay hidden" id="winOverlay">
+    <div class="win-card">
+      <div class="win-mascot" id="winMascot"></div>
+      <h2 id="winText">כל הכבוד!</h2>
+      <div class="win-stars" id="winStars">⭐</div>
+      <button class="btn-primary wide" id="replayBtn">לשחק שוב 🔁</button>
+      <button class="btn-secondary wide" id="toCityBtn">חזרה לעיר 🏙️</button>
     </div>
-    <div class="win-overlay hidden" id="raceWin">
-      <div class="win-card">
-        <div class="win-mascot" id="raceWinMascot"></div>
-        <h2 id="raceWinText">ניצחתם! 🏆</h2>
-        <button class="btn-primary" data-replay="race">מרוץ חדש</button>
-        <button class="btn-secondary" data-back>לתפריט</button>
-      </div>
-    </div>
-  </section>
+  </div>
 
   <div id="confettiLayer" class="confetti-layer"></div>
 
+  <script src="js/audio.js"></script>
   <script src="js/characters.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/city.js"></script>
   <script src="js/games/carwash.js"></script>
   <script src="js/games/race.js"></script>
+  <script src="js/games/fire.js"></script>
+  <script src="js/games/zoo.js"></script>
+  <script src="js/games/traffic.js"></script>
+  <script src="js/games/rescue.js"></script>
+  <script src="js/games/shapes.js"></script>
+  <script src="js/boot.js"></script>
 </body>
 </html>
