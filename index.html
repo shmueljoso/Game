@@ -4,14 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
   <title>העיר הקטנה - משחקים לילדים</title>
-  <meta name="theme-color" content="#ffe9d6" />
+  <meta name="theme-color" content="#9fd8ff" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏙️</text></svg>" />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
   <!-- מסך 1: בחירת דמות מלווה -->
-  <section id="screen-select" class="screen">
+  <section id="screen-select" class="screen soft-bg">
     <div class="center-wrap">
       <h1 class="title">מי יהיה החבר שלך?</h1>
       <p class="subtitle">בחרו חבר שילווה אתכם בכל המשחקים</p>
@@ -19,8 +19,8 @@
     </div>
   </section>
 
-  <!-- מסך 2: שם הילד (אפשר לדלג) -->
-  <section id="screen-name" class="screen hidden">
+  <!-- מסך 2: שם הילד -->
+  <section id="screen-name" class="screen soft-bg hidden">
     <div class="center-wrap">
       <span class="mascot-avatar big" id="nameMascot"></span>
       <h1 class="title">מי משחק היום?</h1>
@@ -30,35 +30,50 @@
     </div>
   </section>
 
-  <!-- מסך 3: מפת העיר -->
+  <!-- מסך 3: מפת העיר (מסך מלא) -->
   <section id="screen-city" class="screen hidden">
-    <div class="topbar">
+    <div class="full-stage" id="cityStage"></div>
+    <div class="hud">
       <button class="profile-chip" id="profileBtn">
         <span class="mascot-avatar small" id="cityMascot"></span>
-        <span class="chip-text"><span id="playerName">שלום!</span></span>
-        <span class="chip-stars">⭐ <span id="starCount">0</span></span>
+        <span class="chip-col">
+          <span class="chip-name" id="playerName">שלום!</span>
+          <span class="chip-row">
+            <span class="chip-stars">⭐ <span class="js-stars">0</span></span>
+            <span class="chip-coins">🪙 <span class="js-coins">0</span></span>
+          </span>
+        </span>
       </button>
-      <h1 class="city-title" id="cityTitle">העיר הקטנה</h1>
       <button class="icon-btn" id="musicBtn" aria-label="מוזיקה">🎵</button>
-    </div>
-    <div class="stage-wrap">
-      <div class="stage" id="cityStage"></div>
     </div>
     <div class="rotate-hint">📱 סובבו את הטלפון כדי לשחק בגדול</div>
   </section>
 
-  <!-- מסך 4: משחק -->
+  <!-- מסך 4: משחק (מסך מלא) -->
   <section id="screen-game" class="screen hidden">
-    <div class="topbar">
+    <div class="full-stage"><div id="gameRoot"></div></div>
+    <div class="hud">
       <button class="icon-btn" id="backBtn" aria-label="חזרה">⬅</button>
-      <h1 class="city-title" id="gameTitle"></h1>
-      <div class="topbar-side">
-        <span class="hint" id="gameHint"></span>
+      <div class="game-chip">
         <span class="mascot-avatar small" id="gameMascot"></span>
+        <span class="chip-col">
+          <span class="chip-name" id="gameTitle"></span>
+          <span class="chip-hint" id="gameHint"></span>
+        </span>
       </div>
     </div>
-    <div class="stage-wrap">
-      <div class="stage"><div id="gameRoot"></div></div>
+  </section>
+
+  <!-- מסך 5: המוסך -->
+  <section id="screen-garage" class="screen soft-bg hidden">
+    <div class="hud">
+      <button class="icon-btn" id="garageBack" aria-label="חזרה">⬅</button>
+      <div class="garage-wallet">🪙 <span class="js-coins">0</span></div>
+    </div>
+    <div class="garage-body">
+      <h1 class="title">המוסך שלי 🔧</h1>
+      <p class="subtitle">שטפו רכבים, אספו מטבעות וקנו רכב חדש</p>
+      <div class="car-grid" id="carGrid"></div>
     </div>
   </section>
 
@@ -68,6 +83,7 @@
       <div class="win-mascot" id="winMascot"></div>
       <h2 id="winText">כל הכבוד!</h2>
       <div class="win-stars" id="winStars">⭐</div>
+      <div class="win-coins" id="winCoins">+3 🪙</div>
       <button class="btn-primary wide" id="replayBtn">לשחק שוב 🔁</button>
       <button class="btn-secondary wide" id="toCityBtn">חזרה לעיר 🏙️</button>
     </div>
@@ -77,8 +93,10 @@
 
   <script src="js/audio.js"></script>
   <script src="js/characters.js"></script>
+  <script src="js/cars.js"></script>
   <script src="js/app.js"></script>
   <script src="js/city.js"></script>
+  <script src="js/garage.js"></script>
   <script src="js/games/carwash.js"></script>
   <script src="js/games/race.js"></script>
   <script src="js/games/fire.js"></script>

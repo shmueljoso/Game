@@ -3,8 +3,8 @@
    כל דמות מיוצרת כ-SVG וקטורי כדי שתיראה חדה בכל גודל ותתמוך במצבי רוח */
 
 const COMPANIONS = {
-  hevhev: {
-    key: "hevhev",
+  havhav: {
+    key: "havhav",
     label: "הבהב",
     bg: "#fbeedc",
     render(mood) {

@@ -1,10 +1,4 @@
-/* מרוץ מכוניות: בוחרים צבע (לימוד צבעים), ספירה לאחור, ולוחצים מהר כדי לנצח */
-
-const CAR_COLORS = [
-  { key: "red", name: "אדום", css: "#e23b3b", emoji: "🚗" },
-  { key: "blue", name: "כחול", css: "#3b7de2", emoji: "🚙" },
-  { key: "yellow", name: "צהוב", css: "#f0b400", emoji: "🚕" },
-];
+/* מרוץ מכוניות: מתחרים ברכב שבחרתם במוסך - ספירה לאחור ולוחצים מהר */
 
 GAMES.race = {
   title: "מרוץ מכוניות 🏁",
@@ -29,16 +23,6 @@ GAMES.race = {
 
     root.innerHTML = `
       <div class="race-bg"><div class="race-scroll" id="raceScroll"></div></div>
-      <div class="color-pick" id="colorPick">
-        <h2>איזה צבע המכונית שלכם?</h2>
-        <div class="color-row">
-          ${CAR_COLORS.map(
-            (c) => `<button class="color-btn" data-color="${c.key}" style="--c:${c.css}">
-                      <span class="color-dot"></span><span>${c.name}</span>
-                    </button>`
-          ).join("")}
-        </div>
-      </div>
     `;
 
     const scroll = root.querySelector("#raceScroll");
@@ -46,19 +30,12 @@ GAMES.race = {
       `<span class="scenery" style="left:${i * 12}%">${["🌳", "🌲", "🏠", "🌻"][i % 4]}</span>`
     ).join("");
 
-    root.querySelectorAll(".color-btn").forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const color = CAR_COLORS.find((c) => c.key === btn.dataset.color);
-        Sound.play("pop");
-        Speech.say(color.name);
-        this.buildTrack(color);
-      });
-    });
+    this.buildTrack();
   },
 
-  buildTrack(color) {
+  buildTrack() {
     const root = this.root;
-    root.querySelector("#colorPick").remove();
+    const myCar = App.currentCar();
 
     const rivals = [
       { emoji: "🚓", css: "#2b2b2b", speed: 3.0 },
@@ -71,7 +48,7 @@ GAMES.race = {
       <div class="race-tracks">
         <div class="track" id="lane0">
           <span class="lane-flag">🏁</span>
-          <span class="racer player" id="racer0" style="--c:${color.css}">${color.emoji}</span>
+          <span class="racer player" id="racer0" style="--c:${myCar.color}">${carSvg(myCar)}</span>
         </div>
         ${rivals
           .map(

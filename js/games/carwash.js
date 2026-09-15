@@ -1,4 +1,12 @@
-/* שטיפת רכב: משפשפים עם הספוגית, סופרים כל כתם שנעלם, ולסיום שטיפה וברק */
+/* שטיפת רכב: בוחרים רכב מהמוסך, משפשפים לכלוכים מכל הסוגים,
+   סופרים כל אחד בקול, ולסיום שוטפים במים ומקבלים מכונית נוצצת */
+
+const DIRT_KINDS = [
+  { kind: "mud", label: "בוץ" },
+  { kind: "dust", label: "אבק" },
+  { kind: "leaf", label: "עלה" },
+  { kind: "splat", label: "כתם" },
+];
 
 GAMES.carwash = {
   title: "שטיפת רכב 🧽",
@@ -18,42 +26,45 @@ GAMES.carwash = {
     root.innerHTML = `
       <div class="cw-sky"></div>
       <div class="cw-floor"></div>
-      <div class="cw-shower">
-        <div class="cw-pipe"></div>
+      <div class="cw-arch">
+        <div class="cw-arch-top"></div>
+        <div class="cw-brushes">
+          ${Array.from({ length: 10 }, (_, i) => `<span style="animation-delay:${i * 0.12}s"></span>`).join("")}
+        </div>
       </div>
       <div class="car-holder" id="cwCar">
-        <svg viewBox="0 0 320 170" class="cw-car-svg">
-          <ellipse cx="160" cy="158" rx="128" ry="9" fill="#00000022"/>
-          <path d="M42 112 Q42 70 92 64 Q112 36 196 36 Q238 36 252 64 Q282 70 282 112 Z"
-                fill="#4d96ff" stroke="#2d6fd6" stroke-width="3"/>
-          <path d="M108 66 Q122 46 196 46 Q226 46 238 66 Z" fill="#cfeaff" opacity="0.9"/>
-          <rect x="42" y="102" width="240" height="22" rx="11" fill="#3d7fe0"/>
-          <circle class="cw-wheel" cx="98" cy="130" r="21" fill="#2b2b2b"/>
-          <circle cx="98" cy="130" r="8" fill="#d5d5d5"/>
-          <circle class="cw-wheel" cx="226" cy="130" r="21" fill="#2b2b2b"/>
-          <circle cx="226" cy="130" r="8" fill="#d5d5d5"/>
-          <circle cx="62" cy="94" r="7" fill="#fff6cc"/>
-          <circle cx="266" cy="94" r="7" fill="#ffd1d1"/>
-          <path class="cw-smile" d="M140 92 Q160 106 180 92" stroke="#2d6fd6" stroke-width="4" fill="none" stroke-linecap="round"/>
-        </svg>
+        ${carSvg(App.currentCar())}
         <div class="dirt-layer" id="cwDirt"></div>
       </div>
-      <div class="counter-badge" id="cwCounter">0 מתוך 6</div>
+      <div class="counter-badge" id="cwCounter">0 מתוך 10</div>
+      <button class="mini-btn" id="cwSwap">🔧 רכב אחר</button>
       <div class="sponge" id="cwSponge">🧽</div>
     `;
 
-    const dirtLayer = root.querySelector("#cwDirt");
+    /* לכלוך פזור על כל גוף הרכב, בכמה סוגים שונים */
+    /* על גוף הרכב ועל התא - מעל הגלגלים כדי שהלכלוך תמיד ייראה על הצבע */
     const positions = [
-      { x: 24, y: 44 }, { x: 40, y: 62 }, { x: 56, y: 40 },
-      { x: 72, y: 58 }, { x: 64, y: 74 }, { x: 33, y: 76 },
+      { x: 14, y: 57 }, { x: 25, y: 54 }, { x: 37, y: 58 }, { x: 49, y: 55 },
+      { x: 61, y: 58 }, { x: 73, y: 54 }, { x: 86, y: 57 },
+      { x: 33, y: 38 }, { x: 46, y: 34 }, { x: 59, y: 38 },
     ];
-    this.spots = positions.map((p) => {
-      const d = el("div", "dirt-spot");
+    const dirtLayer = root.querySelector("#cwDirt");
+    this.spots = shuffle(positions).map((p, i) => {
+      const kind = DIRT_KINDS[i % DIRT_KINDS.length];
+      const d = el("div", `dirt-spot ${kind.kind}`, kind.kind === "leaf" ? "🍂" : "");
       d.style.left = p.x + "%";
       d.style.top = p.y + "%";
-      d.style.setProperty("--tilt", randBetween(-40, 40) + "deg");
+      d.style.setProperty("--tilt", randBetween(-50, 50) + "deg");
+      d.style.setProperty("--scale", randBetween(0.8, 1.25));
       dirtLayer.appendChild(d);
       return { node: d, clean: false };
+    });
+    root.querySelector("#cwCounter").textContent = `0 מתוך ${this.spots.length}`;
+
+    root.querySelector("#cwSwap").addEventListener("click", (e) => {
+      e.stopPropagation();
+      Sound.play("click");
+      Garage.open();
     });
 
     const sponge = root.querySelector("#cwSponge");
@@ -73,14 +84,14 @@ GAMES.carwash = {
     this.spots.forEach((spot) => {
       if (spot.clean) return;
       const c = centerOf(spot.node);
-      if (distance(clientX, clientY, c.x, c.y) > 44) return;
+      if (distance(clientX, clientY, c.x, c.y) > 42) return;
 
       spot.clean = true;
       spot.node.classList.add("gone");
       this.cleaned++;
 
       Sound.play("squeak");
-      Sound.tone(440 + this.cleaned * 70, 0.2, { type: "triangle", vol: 0.16 });
+      Sound.tone(420 + this.cleaned * 45, 0.2, { type: "triangle", vol: 0.16 });
       Speech.say(String(this.cleaned));
 
       this.bubbles(xPct, yPct);
@@ -97,7 +108,7 @@ GAMES.carwash = {
       b.style.left = xPct + "%";
       b.style.top = yPct + "%";
       b.style.setProperty("--dx", randBetween(-40, 40) + "px");
-      b.style.width = b.style.height = randBetween(8, 16) + "px";
+      b.style.width = b.style.height = randBetween(8, 18) + "px";
       b.style.animationDelay = Math.random() * 0.2 + "s";
       this.root.appendChild(b);
       setTimeout(() => b.remove(), 1100);
@@ -115,20 +126,20 @@ GAMES.carwash = {
     let drops = 0;
     this.dropTimer = setInterval(() => {
       const d = el("span", "drop");
-      d.style.left = randBetween(18, 82) + "%";
+      d.style.left = randBetween(14, 86) + "%";
       d.style.animationDuration = randBetween(0.5, 0.9) + "s";
       root.appendChild(d);
       setTimeout(() => d.remove(), 1000);
       if (++drops % 6 === 0) Sound.play("water");
-    }, 70);
+    }, 60);
 
     setTimeout(() => {
       clearInterval(this.dropTimer);
       root.classList.remove("rinsing");
       root.classList.add("shiny");
       Sound.play("sparkle");
-      for (let i = 0; i < 5; i++) {
-        setTimeout(() => App.sparkleAt(root, randBetween(28, 72), randBetween(35, 70), 5), i * 150);
+      for (let i = 0; i < 6; i++) {
+        setTimeout(() => App.sparkleAt(root, randBetween(24, 76), randBetween(35, 70), 5), i * 140);
       }
       setTimeout(() => App.finishGame("המכונית נוצצת"), 900);
     }, 2200);

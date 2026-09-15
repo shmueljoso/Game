@@ -45,6 +45,11 @@ function bindUI() {
     App.showScreen("select");
   });
 
+  document.getElementById("garageBack").addEventListener("click", () => {
+    Sound.play("click");
+    App.goCity();
+  });
+
   document.getElementById("backBtn").addEventListener("click", () => {
     Sound.play("click");
     App.goCity();

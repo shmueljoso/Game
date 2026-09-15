@@ -5,14 +5,17 @@ const STORAGE_KEY = "kidsGameProfile";
 const GAMES = {};
 
 const WORLDS = [
-  { id: "zoo",     label: "גן החיות",   emoji: "🦁", color: "#9ee59a", roof: "#41a05c", x: 96,  y: 176 },
-  { id: "fire",    label: "תחנת כבאות", emoji: "🚒", color: "#ff9a9a", roof: "#d64545", x: 340, y: 176 },
-  { id: "rescue",  label: "בית חולים",  emoji: "🚑", color: "#ffffff", roof: "#ff7b7b", x: 620, y: 176 },
-  { id: "shapes",  label: "אתר בנייה",  emoji: "🏗️", color: "#ffc98b", roof: "#c97b2e", x: 890, y: 176 },
-  { id: "carwash", label: "שטיפת רכב",  emoji: "🚗", color: "#7ec8ff", roof: "#3d7fe0", x: 170, y: 404 },
-  { id: "traffic", label: "הצומת",      emoji: "🚦", color: "#cdb8ff", roof: "#7b5fd6", x: 500, y: 404 },
-  { id: "race",    label: "מסלול מרוץ", emoji: "🏁", color: "#ffd36b", roof: "#e8a020", x: 830, y: 404 },
+  { id: "zoo",     label: "גן החיות",   emoji: "🦁", color: "#8fd98c", roof: "#3f9a58", style: "arch",   x: 120, y: 262 },
+  { id: "fire",    label: "תחנת כבאות", emoji: "🚒", color: "#ff9a9a", roof: "#d14343", style: "tower",  x: 368, y: 252 },
+  { id: "rescue",  label: "בית חולים",  emoji: "🚑", color: "#fdfdff", roof: "#ff7b7b", style: "flat",   x: 636, y: 248 },
+  { id: "shapes",  label: "אתר בנייה",  emoji: "🏗️", color: "#ffc98b", roof: "#c97b2e", style: "site",   x: 880, y: 256 },
+  { id: "carwash", label: "שטיפת רכב",  emoji: "🚗", color: "#7ec8ff", roof: "#3d7fe0", style: "wash",   x: 150, y: 458 },
+  { id: "garage",  label: "המוסך",      emoji: "🔧", color: "#ffd98a", roof: "#b98330", style: "garage", x: 398, y: 462 },
+  { id: "traffic", label: "הצומת",      emoji: "🚦", color: "#cdb8ff", roof: "#7b5fd6", style: "flat",   x: 640, y: 458 },
+  { id: "race",    label: "מסלול מרוץ", emoji: "🏁", color: "#ffd36b", roof: "#e8a020", style: "stand",  x: 886, y: 454 },
 ];
+
+const COINS_PER_WIN = 3;
 
 const App = {
   profile: null,
@@ -20,12 +23,22 @@ const App = {
 
   /* ---------- פרופיל ---------- */
   loadProfile() {
+    let saved = null;
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : null;
+      saved = raw ? JSON.parse(raw) : null;
     } catch (e) {
-      return null;
+      saved = null;
     }
+    if (!saved) return null;
+
+    if (saved.companion === "hevhev") saved.companion = "havhav";
+    saved.stars = saved.stars || 0;
+    saved.coins = saved.coins || 0;
+    saved.done = saved.done || {};
+    saved.cars = saved.cars && saved.cars.length ? saved.cars : ["toyota"];
+    saved.car = saved.cars.includes(saved.car) ? saved.car : saved.cars[0];
+    return saved;
   },
 
   saveProfile() {
@@ -37,7 +50,7 @@ const App = {
   },
 
   setCompanion(key) {
-    this.profile = this.profile || { stars: 0, done: {} };
+    this.profile = this.profile || { stars: 0, coins: 0, done: {}, cars: ["toyota"], car: "toyota" };
     this.profile.companion = key;
     this.saveProfile();
   },
@@ -51,8 +64,32 @@ const App = {
     this.profile.stars = (this.profile.stars || 0) + 1;
     this.profile.done = this.profile.done || {};
     this.profile.done[gameId] = (this.profile.done[gameId] || 0) + 1;
+    this.profile.coins = (this.profile.coins || 0) + COINS_PER_WIN;
     this.saveProfile();
     this.paintProfile();
+  },
+
+  buyCar(id) {
+    const car = getCar(id);
+    if (this.profile.cars.includes(id)) return "owned";
+    if ((this.profile.coins || 0) < car.price) return "poor";
+    this.profile.coins -= car.price;
+    this.profile.cars.push(id);
+    this.profile.car = id;
+    this.saveProfile();
+    this.paintProfile();
+    return "bought";
+  },
+
+  selectCar(id) {
+    if (!this.profile.cars.includes(id)) return false;
+    this.profile.car = id;
+    this.saveProfile();
+    return true;
+  },
+
+  currentCar() {
+    return getCar(this.profile && this.profile.car);
   },
 
   /* ---------- ניווט ---------- */
@@ -69,8 +106,8 @@ const App = {
     });
     const nameEl = document.getElementById("playerName");
     if (nameEl) nameEl.textContent = this.profile.name || "שלום!";
-    const starEl = document.getElementById("starCount");
-    if (starEl) starEl.textContent = this.profile.stars || 0;
+    document.querySelectorAll(".js-stars").forEach((n) => (n.textContent = this.profile.stars || 0));
+    document.querySelectorAll(".js-coins").forEach((n) => (n.textContent = this.profile.coins || 0));
   },
 
   goCity() {
@@ -122,6 +159,7 @@ const App = {
     const msg = (text || "כל הכבוד") + name + "!";
     document.getElementById("winText").textContent = msg;
     document.getElementById("winStars").textContent = "⭐".repeat(opts.stars || 3);
+    document.getElementById("winCoins").textContent = `+${COINS_PER_WIN} 🪙`;
     renderCompanion(document.getElementById("winMascot"), this.profile.companion, "happy");
     document.getElementById("winOverlay").classList.remove("hidden");
     this.confetti();
