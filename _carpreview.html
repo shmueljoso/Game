@@ -1,8 +1,0 @@
-<!doctype html><html><head><meta charset="utf-8"><style>
-body{background:#eef4f8;font-family:sans-serif;margin:0;padding:8px;display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-.cell{background:#fff;border-radius:12px;padding:4px;text-align:center;font-size:13px}
-.car-svg{width:100%;height:auto}
-</style></head><body>
-<script src="/js/cars.js"></script>
-<script>document.body.innerHTML = CARS.map(c => `<div class="cell">${carSvg(c)}<div>${c.name} · ${c.price}🪙</div></div>`).join('');</script>
-</body></html>
