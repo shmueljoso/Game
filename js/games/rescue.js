@@ -27,13 +27,13 @@ GAMES.rescue = {
     Sound.play("siren");
 
     const parts = shuffle([
-      { part: "הראש", x: 50, y: 20 },
-      { part: "האוזן", x: 33, y: 17 },
-      { part: "יד ימין", x: 24, y: 46 },
-      { part: "יד שמאל", x: 76, y: 46 },
-      { part: "הבטן", x: 50, y: 52 },
-      { part: "רגל ימין", x: 36, y: 70 },
-      { part: "רגל שמאל", x: 66, y: 68 },
+      { part: "הראש", x: 50, y: 24 },
+      { part: "האוזן", x: 26, y: 9 },
+      { part: "יד ימין", x: 20, y: 48 },
+      { part: "יד שמאל", x: 80, y: 48 },
+      { part: "הבטן", x: 50, y: 58 },
+      { part: "רגל ימין", x: 34, y: 78 },
+      { part: "רגל שמאל", x: 68, y: 76 },
     ]).slice(0, 4);
 
     const patient = root.querySelector("#rcPatient");
