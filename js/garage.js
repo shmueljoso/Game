@@ -22,6 +22,7 @@ const Garage = {
       card.innerHTML = `
         <span class="car-art">${carSvg(car)}</span>
         <span class="car-name">${car.name}</span>
+        <span class="car-latin">${car.latin}</span>
         <span class="car-tag">${
           isChosen ? "✅ נבחר" : isOwned ? "לבחירה" : `🪙 ${car.price}`
         }</span>
@@ -35,7 +36,7 @@ const Garage = {
     if (isOwned) {
       App.selectCar(car.id);
       Sound.play("star");
-      Speech.say(car.name);
+      Speech.say(car.say || car.name, { en: car.latin });
       this.render();
       return;
     }
@@ -44,7 +45,7 @@ const Garage = {
     if (result === "bought") {
       Sound.play("win");
       App.confetti(30);
-      Speech.say(`קנינו ${car.name}`);
+      Speech.say(`קנינו ${car.say || car.name}`, { en: `We bought a ${car.latin}` });
       this.render();
     } else {
       Sound.play("wrong");

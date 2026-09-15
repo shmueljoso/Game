@@ -12,7 +12,7 @@ function buildCompanionGrid() {
       card.classList.add("chosen");
       renderCompanion(card.querySelector(".companion-avatar"), c.key, "happy");
       Sound.play("star");
-      Speech.say(c.label);
+      Speech.say(c.say || c.label, { en: c.latin });
       App.setCompanion(c.key);
       setTimeout(() => {
         if (App.profile.name) {
@@ -73,6 +73,24 @@ function bindUI() {
     musicBtn.classList.toggle("off", !on);
   });
 
+  /* כפתור התקנה - כרום מודיע מתי אפשר להתקין, ואז מציגים אותו */
+  let installEvent = null;
+  const installBtn = document.getElementById("installBtn");
+  window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    installEvent = e;
+    installBtn.classList.remove("hidden");
+  });
+  installBtn.addEventListener("click", async () => {
+    if (!installEvent) return;
+    Sound.play("click");
+    installEvent.prompt();
+    await installEvent.userChoice;
+    installEvent = null;
+    installBtn.classList.add("hidden");
+  });
+  window.addEventListener("appinstalled", () => installBtn.classList.add("hidden"));
+
   /* הדפדפן מרשה סאונד רק אחרי נגיעה ראשונה של המשתמש */
   const wake = () => {
     Sound.init();
@@ -80,6 +98,15 @@ function bindUI() {
     document.removeEventListener("pointerdown", wake);
   };
   document.addEventListener("pointerdown", wake);
+}
+
+/* שמירת המשחק במכשיר - כך הוא נפתח מיד וגם עובד בלי אינטרנט */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {
+      /* בלי service worker המשחק עדיין עובד, פשוט בלי מצב אופליין */
+    });
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {

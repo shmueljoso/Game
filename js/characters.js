@@ -6,6 +6,8 @@ const COMPANIONS = {
   havhav: {
     key: "havhav",
     label: "הבהב",
+    latin: "Hav Hav",
+    say: "הב הב",
     bg: "#fbeedc",
     render(mood) {
       return baseHead({
@@ -30,6 +32,8 @@ const COMPANIONS = {
   georgie: {
     key: "georgie",
     label: "ג'ורג'י",
+    latin: "Georgie",
+    say: "ג׳ורג׳י",
     bg: "#f3e2cf",
     render(mood) {
       return baseHead({
@@ -52,6 +56,8 @@ const COMPANIONS = {
   bear: {
     key: "bear",
     label: "דובי",
+    latin: "Dubi",
+    say: "דובי",
     bg: "#ffe0cf",
     render(mood) {
       return baseHead({

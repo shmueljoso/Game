@@ -47,7 +47,7 @@ GAMES.puzzle = {
       makeDraggable(piece, root, (node, x, y) => this.drop(node, x, y));
     });
 
-    App.saySpeech(root, car.name);
+    App.saySpeech(root, car.name, { en: car.latin, say: car.say });
   },
 
   drop(node, clientX, clientY) {

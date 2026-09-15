@@ -1,21 +1,23 @@
 /* קטלוג הרכבים של המוסך + מנוע ציור: כל רכב מצויר כ-SVG לפי סוג מרכב וצבע */
 
+/* name - מה שכתוב על המסך, latin - מה שכתוב על תג הרכב ומה שאומרים בקול אנגלי,
+   say - איות עברי שגורם לקול העברי להגות את השם נכון */
 const CARS = [
-  { id: "toyota",  name: "טויוטה", type: "hatch",  color: "#e8443b", price: 0 },
-  { id: "mazda",   name: "מאזדה",  type: "sedan",  color: "#2f6fd0", price: 3 },
-  { id: "kia",     name: "קיה",    type: "hatch",  color: "#9b6ede", price: 5 },
-  { id: "hyundai", name: "יונדאי", type: "suv",    color: "#cdd3db", price: 7 },
-  { id: "skoda",   name: "סקודה",  type: "wagon",  color: "#2f9e63", price: 9 },
-  { id: "geely",   name: "ג'ילי",  type: "sedan",  color: "#f2921d", price: 12 },
-  { id: "nissan",  name: "ניסאן",  type: "suv",    color: "#24486f", price: 14 },
-  { id: "byd",     name: "BYD",    type: "sport",  color: "#19bcd0", price: 16 },
-  { id: "ford",    name: "פורד",   type: "pickup", color: "#1f7a8c", price: 18 },
-  { id: "jeep",    name: "ג'יפ",   type: "jeep",   color: "#7d8b46", price: 20 },
-  { id: "tesla",   name: "טסלה",   type: "sport",  color: "#f4f6f8", price: 22 },
-  { id: "racer",   name: "מכונית מרוץ", type: "sport", color: "#ffd21e", price: 25 },
-  { id: "bus",     name: "אוטובוס", type: "van",   color: "#f2b807", price: 28 },
-  { id: "truck",   name: "משאית",  type: "truck",  color: "#d95252", price: 32 },
-  { id: "monster", name: "מפלצת",  type: "monster", color: "#7b3fbf", price: 40 },
+  { id: "toyota",  name: "טויוטה", latin: "Toyota",  say: "טויוטה",      type: "hatch",   color: "#e8443b", price: 0 },
+  { id: "mazda",   name: "מאזדה",  latin: "Mazda",   say: "מזדה",        type: "sedan",   color: "#2f6fd0", price: 3 },
+  { id: "kia",     name: "קיה",    latin: "Kia",     say: "קיה",         type: "hatch",   color: "#9b6ede", price: 5 },
+  { id: "hyundai", name: "יונדאי", latin: "Hyundai", say: "יונדאי",      type: "suv",     color: "#cdd3db", price: 7 },
+  { id: "skoda",   name: "סקודה",  latin: "Skoda",   say: "סקודה",       type: "wagon",   color: "#2f9e63", price: 9 },
+  { id: "geely",   name: "ג'ילי",  latin: "Geely",   say: "ג׳ילי",       type: "sedan",   color: "#f2921d", price: 12 },
+  { id: "nissan",  name: "ניסאן",  latin: "Nissan",  say: "ניסאן",       type: "suv",     color: "#24486f", price: 14 },
+  { id: "byd",     name: "BYD",    latin: "BYD",     say: "בי וואי די",  type: "sport",   color: "#19bcd0", price: 16 },
+  { id: "ford",    name: "פורד",   latin: "Ford",    say: "פורד",        type: "pickup",  color: "#1f7a8c", price: 18 },
+  { id: "jeep",    name: "ג'יפ",   latin: "Jeep",    say: "ג׳יפ",        type: "jeep",    color: "#7d8b46", price: 20 },
+  { id: "tesla",   name: "טסלה",   latin: "Tesla",   say: "טסלה",        type: "sport",   color: "#f4f6f8", price: 22 },
+  { id: "racer",   name: "מכונית מרוץ", latin: "Racer", say: "מכונית מרוץ", type: "sport", color: "#ffd21e", price: 25 },
+  { id: "bus",     name: "אוטובוס", latin: "Bus",    say: "אוטובוס",     type: "van",     color: "#f2b807", price: 28 },
+  { id: "truck",   name: "משאית",  latin: "Truck",   say: "משאית",       type: "truck",   color: "#d95252", price: 32 },
+  { id: "monster", name: "מפלצת",  latin: "Monster", say: "רכב מפלצת",   type: "monster", color: "#7b3fbf", price: 40 },
 ];
 
 /* מידות המרכב לכל סוג רכב (במערכת קואורדינטות 360x190) */
@@ -100,6 +102,19 @@ function carSvg(car, opts = {}) {
         ).join("")
       : "";
 
+  /* תג מקורי בסגנון אמבלם רכב - האות הראשונה של השם בתוך מגן.
+     במכוון לא שכפול של הלוגו האמיתי של אף יצרן */
+  const badgeX = (s.cabinLeft + s.cabinRight) / 2 + 6;
+  const badgeY = s.bodyTop + 30;
+  const emblem = `
+    <g class="car-badge">
+      <path d="M${badgeX - 15} ${badgeY - 14} L${badgeX + 15} ${badgeY - 14} L${badgeX + 15} ${badgeY + 4}
+               Q${badgeX} ${badgeY + 20} ${badgeX - 15} ${badgeY + 4} Z"
+            fill="#ffffff" stroke="${dark}" stroke-width="2.5" stroke-linejoin="round"/>
+      <text x="${badgeX}" y="${badgeY + 5}" text-anchor="middle" font-size="17" font-weight="800"
+            font-family="Segoe UI, Tahoma, sans-serif" fill="${dark}">${(car.latin || "?")[0]}</text>
+    </g>`;
+
   const spoiler =
     car.type === "sport"
       ? `<rect x="${s.bodyRight - 44}" y="${s.bodyTop - 14}" width="44" height="8" rx="4" fill="${dark}"/>`
@@ -123,6 +138,7 @@ function carSvg(car, opts = {}) {
     <rect x="${s.bodyLeft + 4}" y="${s.bodyTop + 26}" width="18" height="12" rx="6" fill="#fff4c2"/>
     <rect x="${s.bodyRight - 22}" y="${s.bodyTop + 26}" width="18" height="12" rx="6" fill="#ffc9c9"/>
     <rect x="${(s.cabinLeft + s.cabinRight) / 2 - 4}" y="${s.bodyTop + 4}" width="8" height="10" rx="4" fill="${dark}"/>
+    ${emblem}
     ${wheels}
   </svg>`;
 }

@@ -192,33 +192,42 @@ const Sound = {
   },
 };
 
-/* דיבור בעברית - רק אם יש קול עברי זמין במכשיר */
+/* דיבור: מעדיפים קול עברי. אם במכשיר יש רק קול אנגלי, אומרים את הגרסה הלועזית
+   (למשל Hav Hav במקום הבהב) כדי שההגייה תהיה נכונה ולא אותיות מבולבלות */
 const Speech = {
-  voice: null,
-  ready: false,
+  voices: { he: null, en: null },
 
   init() {
     if (!("speechSynthesis" in window)) return;
     const pick = () => {
       try {
-        const voices = window.speechSynthesis.getVoices() || [];
-        this.voice = voices.find((v) => (v.lang || "").toLowerCase().startsWith("he")) || null;
-        this.ready = true;
+        const list = window.speechSynthesis.getVoices() || [];
+        const byLang = (prefix) => list.find((v) => (v.lang || "").toLowerCase().startsWith(prefix)) || null;
+        this.voices.he = byLang("he");
+        this.voices.en = byLang("en");
       } catch (e) {
-        this.ready = true;
+        /* אין קולות זמינים - פשוט לא מדברים */
       }
     };
     pick();
     window.speechSynthesis.onvoiceschanged = pick;
   },
 
-  say(text) {
-    if (!this.voice || !Sound.sfxOn) return;
+  /* text - עברית. opts.en - איך לומר את זה באנגלית, כשזה השם הלועזי של המותג או הדמות */
+  say(text, opts = {}) {
+    if (!Sound.sfxOn) return;
+    const hebrew = this.voices.he;
+    const voice = hebrew || this.voices.en;
+    if (!voice) return;
+
+    const phrase = hebrew ? text : opts.en || text;
+    if (!phrase) return;
+
     try {
       window.speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance(text);
-      u.voice = this.voice;
-      u.lang = this.voice.lang;
+      const u = new SpeechSynthesisUtterance(phrase);
+      u.voice = voice;
+      u.lang = voice.lang;
       u.rate = 0.9;
       u.pitch = 1.2;
       window.speechSynthesis.speak(u);
