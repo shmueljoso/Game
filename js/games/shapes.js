@@ -26,18 +26,19 @@ GAMES.shapes = {
   start(root) {
     this.root = root;
     this.done = 0;
-    this.queue = Array.from({ length: this.total }, (_, i) => ({
-      type: SHAPE_TYPES[i % SHAPE_TYPES.length],
-      color: SHAPE_COLORS[Math.floor(Math.random() * SHAPE_COLORS.length)],
-    }));
-    this.queue = shuffle(this.queue);
+    this.queue = shuffle(
+      Array.from({ length: this.total }, (_, i) => ({
+        type: SHAPE_TYPES[i % SHAPE_TYPES.length],
+        color: SHAPE_COLORS[Math.floor(Math.random() * SHAPE_COLORS.length)],
+      }))
+    );
 
     root.innerHTML = `
       <div class="sh-sky"></div>
       <div class="sh-ground"></div>
       <span class="crane" id="shCrane">🏗️</span>
       <div class="sorter-box">
-        ${SHAPE_TYPES.map(
+        ${shuffle(SHAPE_TYPES).map(
           (t) => `<div class="hole ${t.key}" data-shape="${t.key}"><span class="hole-label">${t.name}</span></div>`
         ).join("")}
       </div>

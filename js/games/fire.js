@@ -31,10 +31,13 @@ GAMES.fire = {
       <div class="nozzle" id="nozzle">💧</div>
     `;
 
-    const spots = [
-      { x: 47, y: 30 }, { x: 60, y: 24 }, { x: 72, y: 34 },
-      { x: 54, y: 46 }, { x: 68, y: 50 },
-    ];
+    /* מיקום אקראי על הבית בכל משחק, עם מרווח בין הלהבות */
+    const spots = [];
+    let guard = 0;
+    while (spots.length < 5 && guard++ < 300) {
+      const p = { x: randBetween(36, 76), y: randBetween(20, 52) };
+      if (spots.every((s) => Math.hypot(s.x - p.x, s.y - p.y) > 13)) spots.push(p);
+    }
     this.flames = spots.map((p, i) => {
       const f = el("span", "flame", "🔥");
       f.style.left = p.x + "%";

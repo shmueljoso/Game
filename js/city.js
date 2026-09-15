@@ -3,11 +3,13 @@
 
 const ROAD_PATH =
   "M -60 352 C 140 296, 300 420, 500 384 C 700 348, 830 300, 1060 344 " +
-  "C 1260 388, 1420 300, 1620 352 C 1790 396, 1900 330, 2060 356";
+  "C 1260 388, 1420 300, 1620 352 C 1790 396, 1900 330, 2060 356 " +
+  "C 2240 380, 2400 306, 2620 350 C 2800 386, 2920 330, 3060 352";
 
 const AREAS = [
   { name: "עיר הרכבים" },
   { name: "הפארק" },
+  { name: "כיכר העיר" },
 ];
 
 const City = {
@@ -43,7 +45,7 @@ const City = {
         </defs>
 
         <g class="world" id="cityWorld">
-          <rect x="-60" y="-60" width="2120" height="720" fill="url(#sky)"/>
+          <rect x="-60" y="-60" width="3120" height="720" fill="url(#sky)"/>
 
           <g class="sun-group">
             <circle r="120" fill="url(#sunGlow)"/>
@@ -67,6 +69,8 @@ const City = {
 
           ${cloud(170, 96, 1.1)} ${cloud(560, 62, 0.85)} ${cloud(880, 130, 1.2)}
           ${cloud(1320, 90, 1.0)} ${cloud(1760, 120, 1.15)}
+          ${cloud(2260, 100, 1.05)} ${cloud(2760, 74, 0.9)}
+          ${balloons(2620, 156)}
 
           <g class="birds">
             <path d="M0 0 q9 -9 18 0 q9 -9 18 0" stroke="#5b6b7a" stroke-width="3" fill="none" stroke-linecap="round"/>
@@ -75,9 +79,11 @@ const City = {
 
           <path d="M-60 330 Q 120 250 300 318 Q 470 250 640 312 Q 820 248 1000 322
                    Q 1180 252 1360 316 Q 1540 250 1720 314 Q 1900 250 2060 320
-                   L2060 620 L-60 620 Z" fill="url(#hillBack)"/>
+                   Q 2240 252 2420 316 Q 2600 250 2780 314 Q 2940 252 3060 320
+                   L3060 620 L-60 620 Z" fill="url(#hillBack)"/>
           <path d="M-60 356 Q 200 300 420 352 Q 660 300 1000 358
-                   Q 1300 302 1560 356 Q 1820 300 2060 358 L2060 620 L-60 620 Z" fill="url(#grass)"/>
+                   Q 1300 302 1560 356 Q 1820 300 2060 358
+                   Q 2320 302 2580 356 Q 2840 300 3060 358 L3060 620 L-60 620 Z" fill="url(#grass)"/>
 
           <path d="${ROAD_PATH}" fill="none" stroke="#5d5d69" stroke-width="66" stroke-linecap="round"/>
           <path d="${ROAD_PATH}" fill="none" stroke="#72727f" stroke-width="58" stroke-linecap="round"/>
@@ -95,9 +101,13 @@ const City = {
           ${tree(30, 506, 0.85)} ${tree(340, 510, 0.92)} ${tree(660, 506, 0.85)} ${tree(978, 510, 0.9)}
           ${tree(1330, 250, 0.72)} ${tree(1660, 248, 0.7)} ${tree(1990, 252, 0.7)}
           ${tree(1030, 508, 0.85)} ${tree(1340, 512, 0.92)} ${tree(1660, 506, 0.85)} ${tree(1990, 510, 0.9)}
+          ${tree(2340, 250, 0.72)} ${tree(2660, 248, 0.7)} ${tree(2990, 252, 0.7)}
+          ${tree(2060, 508, 0.85)} ${tree(2340, 512, 0.92)} ${tree(2660, 506, 0.85)} ${tree(2990, 510, 0.9)}
+          ${fountain(2500, 500)}
           ${flowers(60, 470)} ${flowers(640, 470)} ${flowers(1060, 470)} ${flowers(1700, 466)}
-          ${lamp(340, 424)} ${lamp(1040, 420)} ${lamp(1700, 424)}
-          ${bench(640, 556)} ${bench(1340, 556)}
+          ${flowers(2140, 470)} ${flowers(2860, 466)}
+          ${lamp(340, 424)} ${lamp(1040, 420)} ${lamp(1700, 424)} ${lamp(2320, 424)} ${lamp(2760, 420)}
+          ${bench(640, 556)} ${bench(1340, 556)} ${bench(2260, 556)} ${bench(2740, 556)}
 
           <g id="hotspots"></g>
         </g>
@@ -315,6 +325,44 @@ const BUILDINGS = {
     <rect x="-40" y="-122" width="80" height="22" rx="11" fill="#ffffffdd"/>
     <text x="0" y="-105" text-anchor="middle" font-size="18">📮</text>`,
 
+  /* תחנת רדיו עם אנטנה */
+  radio: (w) => `
+    <rect x="-74" y="-96" width="148" height="96" rx="12" fill="${w.color}" stroke="${w.roof}" stroke-width="4"/>
+    <rect x="-82" y="-110" width="164" height="18" rx="9" fill="${w.roof}"/>
+    <line x1="42" y1="-110" x2="58" y2="-168" stroke="${w.roof}" stroke-width="6" stroke-linecap="round"/>
+    <circle class="radio-blip" cx="58" cy="-170" r="8" fill="#ff6b6b"/>
+    <path d="M40 -160 Q62 -150 74 -132" stroke="${w.roof}" stroke-width="3" fill="none" opacity="0.6"/>
+    <path d="M30 -166 Q66 -152 86 -124" stroke="${w.roof}" stroke-width="3" fill="none" opacity="0.35"/>
+    <rect x="-48" y="-72" width="96" height="52" rx="8" fill="#ffffffdd"/>
+    <circle cx="-26" cy="-46" r="14" fill="${w.roof}" opacity="0.6"/>
+    <circle cx="26" cy="-46" r="14" fill="${w.roof}" opacity="0.6"/>
+    <text x="0" y="-8" text-anchor="middle" font-size="34">${w.emoji}</text>`,
+
+  /* בית הקלפים - משחק הזיכרון */
+  cards: (w) => `
+    <rect x="-76" y="-94" width="152" height="94" rx="12" fill="${w.color}" stroke="${w.roof}" stroke-width="4"/>
+    <path d="M-84 -94 L0 -136 L84 -94 Z" fill="${w.roof}"/>
+    <g transform="translate(-34,-58) rotate(-12)">
+      <rect x="-16" y="-22" width="32" height="44" rx="5" fill="#ffffff" stroke="${w.roof}" stroke-width="3"/>
+      <text x="0" y="8" text-anchor="middle" font-size="20">🚗</text>
+    </g>
+    <g transform="translate(34,-58) rotate(12)">
+      <rect x="-16" y="-22" width="32" height="44" rx="5" fill="#ffffff" stroke="${w.roof}" stroke-width="3"/>
+      <text x="0" y="8" text-anchor="middle" font-size="20">❓</text>
+    </g>
+    <text x="0" y="-8" text-anchor="middle" font-size="34">${w.emoji}</text>`,
+
+  /* סטודיו לציור */
+  studio: (w) => `
+    <rect x="-76" y="-96" width="152" height="96" rx="12" fill="${w.color}" stroke="${w.roof}" stroke-width="4"/>
+    <path d="M-84 -96 L0 -138 L84 -96 Z" fill="${w.roof}"/>
+    <rect x="-46" y="-74" width="92" height="56" rx="6" fill="#fffdf7" stroke="${w.roof}" stroke-width="3"/>
+    <circle cx="-26" cy="-58" r="9" fill="#e8443b"/>
+    <rect x="-8" y="-66" width="18" height="18" rx="4" fill="#2f6fd0"/>
+    <path d="M32 -66 L44 -46 L20 -46 Z" fill="#3fa85f"/>
+    <path d="M-40 -30 Q0 -44 40 -30" stroke="#9b6ede" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <text x="0" y="-4" text-anchor="middle" font-size="32">${w.emoji}</text>`,
+
   /* חנות צעצועים צבעונית - הפאזל */
   toy: (w) => `
     <rect x="-80" y="-96" width="160" height="96" rx="14" fill="${w.color}" stroke="${w.roof}" stroke-width="4"/>
@@ -370,6 +418,21 @@ function lamp(x, y) {
       <path d="M-3 -72 Q-3 -86 12 -86" stroke="#6d7a86" stroke-width="6" fill="none" stroke-linecap="round"/>
       <circle cx="14" cy="-82" r="9" fill="#ffe9a8"/>
       <circle cx="14" cy="-82" r="16" fill="#ffe9a8" opacity="0.25"/>
+    </g>`;
+}
+
+function fountain(x, y) {
+  return `
+    <g transform="translate(${x},${y})">
+      <ellipse cx="0" cy="8" rx="72" ry="22" fill="#cfd8e0"/>
+      <ellipse cx="0" cy="4" rx="62" ry="17" fill="#8fd8f5"/>
+      <rect x="-7" y="-40" width="14" height="44" rx="7" fill="#cfd8e0"/>
+      <ellipse cx="0" cy="-42" rx="22" ry="7" fill="#cfd8e0"/>
+      <g class="fountain-jet">
+        <ellipse cx="0" cy="-58" rx="7" ry="16" fill="#bfe8ff" opacity="0.85"/>
+        <ellipse cx="-16" cy="-46" rx="5" ry="11" fill="#bfe8ff" opacity="0.6"/>
+        <ellipse cx="16" cy="-46" rx="5" ry="11" fill="#bfe8ff" opacity="0.6"/>
+      </g>
     </g>`;
 }
 

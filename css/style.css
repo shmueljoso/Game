@@ -1383,3 +1383,242 @@ html, body {
 /* כפתורי צד ב-HUD (מוזיקה + התקנה) */
 .hud-side { display: flex; gap: 8px; }
 .install-btn { animation: pop 0.6s ease; }
+
+/* ===== מצב ילד ===== */
+.kid-lock.locked { background: #ffe0e6; }
+.kid-lock.holding {
+  background: conic-gradient(#ff8fab var(--hold, 0%), #ffffff 0);
+  animation: holdFill 2.5s linear forwards;
+}
+@keyframes holdFill {
+  from { background: conic-gradient(#ff8fab 0%, #ffffff 0); }
+  to { background: conic-gradient(#ff8fab 100%, #ffffff 0); }
+}
+body.kid-mode .install-btn { display: none !important; }
+body.kid-mode { overscroll-behavior: none; }
+
+.tip-card { text-align: center; }
+.tip-text { font-size: clamp(13px, 2.4vmin, 16px); line-height: 1.5; color: #5d4a3a; margin: 8px 0 12px; }
+.tip-text.small { font-size: clamp(11px, 2vmin, 14px); color: #8a6e57; }
+
+/* ===== רדיו ===== */
+.rd-bg { position: absolute; inset: 0; background: linear-gradient(#2f2a48, #6b4f86 70%, #b06a9a); }
+.rd-floor { position: absolute; inset: 78% 0 0 0; background: linear-gradient(#4a3358, #33233f); }
+
+.boombox {
+  position: absolute;
+  left: 50%;
+  top: 25%;
+  transform: translate(-50%, -50%);
+  width: calc(var(--u) * 52);
+  transition: transform 0.12s ease;
+}
+.boombox.beat { transform: translate(-50%, -50%) scale(1.04); }
+.bb-top {
+  height: calc(var(--u) * 5);
+  background: #3b3b4a;
+  border-radius: calc(var(--u) * 3) calc(var(--u) * 3) 0 0;
+  position: relative;
+}
+.bb-handle {
+  position: absolute;
+  top: calc(var(--u) * -3);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40%;
+  height: calc(var(--u) * 4);
+  border: calc(var(--u) * 1) solid #3b3b4a;
+  border-bottom: none;
+  border-radius: calc(var(--u) * 3) calc(var(--u) * 3) 0 0;
+}
+.bb-body {
+  background: linear-gradient(#5a5a6e, #42424f);
+  border-radius: 0 0 calc(var(--u) * 3) calc(var(--u) * 3);
+  padding: calc(var(--u) * 2);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 2);
+  box-shadow: 0 8px 0 #00000055;
+}
+.bb-speaker {
+  width: calc(var(--u) * 10);
+  height: calc(var(--u) * 10);
+  border-radius: 50%;
+  background: radial-gradient(circle, #2b2b36 40%, #7d7d90 41%, #2b2b36 70%);
+  flex: 0 0 auto;
+  transition: transform 0.12s ease;
+}
+.boombox.beat .bb-speaker { transform: scale(1.12); }
+.bb-screen {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  background: #9fe6b0;
+  border-radius: calc(var(--u) * 1.5);
+  padding: calc(var(--u) * 1.4) calc(var(--u) * 1);
+  font-weight: 800;
+  font-size: calc(var(--u) * 3.4);
+  color: #23402c;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.rd-dancer {
+  position: absolute;
+  top: 8%;
+  inset-inline-end: 6%;
+  width: calc(var(--u) * 17);
+  height: calc(var(--u) * 17);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.12s ease;
+}
+.rd-dancer.beat { transform: translateY(calc(var(--u) * -2)) rotate(-6deg); }
+
+.song-row {
+  position: absolute;
+  inset-inline: calc(var(--u) * 3);
+  bottom: calc(var(--u) * 17);
+  align-items: stretch;
+  display: flex;
+  gap: calc(var(--u) * 2);
+  overflow-x: auto;
+  padding-bottom: calc(var(--u) * 1);
+  scrollbar-width: thin;
+}
+.song-card {
+  flex: 0 0 auto;
+  border: none;
+  background: #ffffffe8;
+  border-radius: calc(var(--u) * 3);
+  padding: calc(var(--u) * 1.4) calc(var(--u) * 2.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--u) * 0.6);
+  cursor: pointer;
+  font-family: inherit;
+  box-shadow: var(--shadow);
+}
+.song-emoji { font-size: calc(var(--u) * 6); }
+.song-title { font-size: calc(var(--u) * 2.6); font-weight: 800; max-width: calc(var(--u) * 17); line-height: 1.15; }
+.song-card.active { background: #ffe9a8; animation: pop 0.5s ease; }
+
+.rd-controls {
+  position: absolute;
+  bottom: calc(var(--u) * 3);
+  inset-inline-start: 50%;
+  transform: translateX(50%);
+  display: flex;
+  align-items: center;
+  gap: calc(var(--u) * 3);
+  z-index: 8;
+}
+.rd-btn {
+  border: none;
+  border-radius: 50%;
+  width: calc(var(--u) * 11);
+  height: calc(var(--u) * 11);
+  font-size: calc(var(--u) * 5);
+  background: #ffffffe8;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+.rd-btn.big {
+  width: calc(var(--u) * 15);
+  height: calc(var(--u) * 15);
+  font-size: calc(var(--u) * 7);
+  background: linear-gradient(180deg, #ff9fb8, var(--accent));
+  color: #fff;
+}
+.rd-btn:active { transform: translateY(3px); }
+
+.float-note {
+  position: absolute;
+  bottom: 34%;
+  font-size: calc(var(--u) * 6);
+  pointer-events: none;
+  animation: heartUp 1.6s ease-out forwards;
+  z-index: 8;
+}
+
+.radio-blip { animation: blink 1.2s steps(2, end) infinite; }
+@keyframes blink { 50% { opacity: 0.25; } }
+.fountain-jet { animation: jetPulse 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center bottom; }
+@keyframes jetPulse {
+  0%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(1.15); }
+}
+
+/* ===== זיכרון ===== */
+.mm-bg { position: absolute; inset: 0; background: linear-gradient(#d9f2ee, #a8e0d6); }
+.card-grid {
+  position: absolute;
+  inset: 13% 6% 7%;
+  display: grid;
+  grid-template-columns: repeat(4, calc(var(--u) * 16.5));
+  gap: calc(var(--u) * 2);
+  justify-content: center;
+  align-content: center;
+}
+.mem-card {
+  position: relative;
+  border: none;
+  border-radius: calc(var(--u) * 2.5);
+  background: #ffffff;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  aspect-ratio: 3 / 4;
+  animation: dropIn 0.5s ease backwards;
+  overflow: hidden;
+}
+.mem-back, .mem-face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: calc(var(--u) * 9);
+  transition: opacity 0.18s ease, transform 0.25s ease;
+}
+.mem-back { background: linear-gradient(135deg, #6fc5b8, #3f9e92); color: #ffffffcc; }
+.mem-face { opacity: 0; transform: rotateY(90deg); }
+.mem-card.open .mem-back { opacity: 0; transform: rotateY(90deg); }
+.mem-card.open .mem-face { opacity: 1; transform: rotateY(0); }
+.mem-card.done { background: #d8ffd0; animation: pop 0.5s ease; }
+
+/* ===== ציור ===== */
+.paint-canvas {
+  position: absolute;
+  inset: 0 0 calc(var(--u) * 15) 0;
+  width: 100%;
+  height: calc(100% - var(--u) * 15);
+  touch-action: none;
+  cursor: crosshair;
+  background: #fffdf7;
+}
+.palette {
+  position: absolute;
+  bottom: calc(var(--u) * 2);
+  inset-inline-start: 50%;
+  transform: translateX(50%);
+  display: flex;
+  gap: calc(var(--u) * 1.6);
+  background: #ffffffdd;
+  border-radius: 999px;
+  padding: calc(var(--u) * 1.4) calc(var(--u) * 2.4);
+  box-shadow: var(--shadow);
+  z-index: 8;
+}
+.paint-dot {
+  width: calc(var(--u) * 8);
+  height: calc(var(--u) * 8);
+  border-radius: 50%;
+  border: calc(var(--u) * 0.7) solid #ffffff;
+  background: var(--c);
+  cursor: pointer;
+  box-shadow: 0 3px 0 #00000022;
+}
+.paint-dot.active { transform: scale(1.18); border-color: #3a2c22; }
+.game-root.paint .counter-badge { bottom: auto; top: calc(var(--u) * 3); }

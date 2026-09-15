@@ -59,6 +59,7 @@
       </button>
       <div class="hud-side">
         <button class="icon-btn install-btn hidden" id="installBtn" aria-label="התקנת האפליקציה">📲</button>
+        <button class="icon-btn kid-lock" id="kidLockBtn" aria-label="מצב ילד">🔓</button>
         <button class="icon-btn" id="musicBtn" aria-label="מוזיקה">🎵</button>
       </div>
     </div>
@@ -105,11 +106,25 @@
     </div>
   </div>
 
+  <!-- הסבר להורה על מצב ילד -->
+  <div class="win-overlay hidden" id="kidTip">
+    <div class="win-card tip-card">
+      <h2>🔒 מצב ילד</h2>
+      <p class="tip-text">המשחק ייפתח במסך מלא והמסך לא ייכבה. כדי לצאת - <b>מחזיקים</b> את כפתור המנעול שתי שניות וחצי.</p>
+      <p class="tip-text small">רוצים שהילד לא יוכל לצאת לאפליקציות אחרות? הפעילו <b>הצמדת מסך</b> באנדרואיד
+        (הגדרות ← אבטחה ← הצמדת אפליקציה, ואז במסך האפליקציות האחרונות בוחרים להצמיד),
+        או <b>גישה מודרכת</b> באייפון (הגדרות ← נגישות ← גישה מודרכת, ואז שלוש לחיצות על כפתור הצד).</p>
+      <button class="btn-primary wide" id="kidTipClose">הבנתי, מפעילים! 🔒</button>
+    </div>
+  </div>
+
   <div id="confettiLayer" class="confetti-layer"></div>
 
   <script src="js/audio.js"></script>
   <script src="js/characters.js"></script>
   <script src="js/cars.js"></script>
+  <script src="js/songs.js"></script>
+  <script src="js/kidmode.js"></script>
   <script src="js/app.js"></script>
   <script src="js/city.js"></script>
   <script src="js/garage.js"></script>
@@ -124,6 +139,9 @@
   <script src="js/games/music.js"></script>
   <script src="js/games/market.js"></script>
   <script src="js/games/puzzle.js"></script>
+  <script src="js/games/radio.js"></script>
+  <script src="js/games/memory.js"></script>
+  <script src="js/games/paint.js"></script>
   <script src="js/boot.js"></script>
 </body>
 </html>

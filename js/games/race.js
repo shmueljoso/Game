@@ -37,10 +37,12 @@ GAMES.race = {
     const root = this.root;
     const myCar = App.currentCar();
 
-    const rivals = [
-      { emoji: "🚓", css: "#2b2b2b", speed: 3.0 },
-      { emoji: "🚚", css: "#5aa469", speed: 2.6 },
-    ];
+    const rivals = shuffle([
+      { emoji: "🚓", speed: randBetween(2.6, 3.3) },
+      { emoji: "🚚", speed: randBetween(2.2, 3.0) },
+      { emoji: "🏍️", speed: randBetween(2.4, 3.2) },
+      { emoji: "🚐", speed: randBetween(2.2, 2.9) },
+    ]).slice(0, 2);
 
     root.insertAdjacentHTML(
       "beforeend",

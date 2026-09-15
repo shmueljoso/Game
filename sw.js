@@ -1,7 +1,7 @@
 /* Service worker: שומר את כל המשחק במטמון כדי שיעבוד גם בלי אינטרנט
    ויהיה אפשר להתקין אותו כאפליקציה */
 
-const CACHE = "little-city-v1";
+const CACHE = "little-city-v2";
 
 const ASSETS = [
   "./",
@@ -26,6 +26,13 @@ const ASSETS = [
   "./js/games/music.js",
   "./js/games/market.js",
   "./js/games/puzzle.js",
+  "./js/games/radio.js",
+  "./js/games/memory.js",
+  "./js/games/paint.js",
+  "./js/songs.js",
+  "./js/kidmode.js",
+  "./logos/logos.json",
+  "./songs/songs.json",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./icons/icon-maskable-512.png",

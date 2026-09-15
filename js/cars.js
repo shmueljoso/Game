@@ -34,6 +34,22 @@ const BODY_SPECS = {
   monster: { bodyTop: 70, bodyLeft: 58, bodyRight: 306, cabinLeft: 92, cabinRight: 268, roofY: 26, slant: 14, wheelR: 38, wheels: [110, 254] },
 };
 
+/* לוגואים אמיתיים הם אופציונליים: מי שרוצה מוסיף קבצים לתיקיית logos
+   ורושם את המזהים ב-logos/logos.json. בלי זה מוצג האמבלם עם האות */
+const Logos = {
+  have: new Set(),
+  async load() {
+    try {
+      const res = await fetch("logos/logos.json", { cache: "no-store" });
+      if (!res.ok) return;
+      const list = await res.json();
+      if (Array.isArray(list)) list.forEach((id) => this.have.add(id));
+    } catch (e) {
+      /* אין רשימת לוגואים - ממשיכים עם האמבלם המצויר */
+    }
+  },
+};
+
 function shade(hex, amount) {
   const n = parseInt(hex.slice(1), 16);
   const clamp = (v) => Math.max(0, Math.min(255, v));
@@ -113,6 +129,10 @@ function carSvg(car, opts = {}) {
             fill="#ffffff" stroke="${dark}" stroke-width="2.5" stroke-linejoin="round"/>
       <text x="${badgeX}" y="${badgeY + 5}" text-anchor="middle" font-size="17" font-weight="800"
             font-family="Segoe UI, Tahoma, sans-serif" fill="${dark}">${(car.latin || "?")[0]}</text>
+      ${Logos.have.has(car.id)
+        ? `<image href="logos/${car.id}.png" x="${badgeX - 13}" y="${badgeY - 12}" width="26" height="26"
+                 preserveAspectRatio="xMidYMid meet"/>`
+        : ""}
     </g>`;
 
   const spoiler =

@@ -26,12 +26,15 @@ GAMES.rescue = {
 
     Sound.play("siren");
 
-    const parts = [
+    const parts = shuffle([
       { part: "הראש", x: 50, y: 20 },
-      { part: "היד", x: 24, y: 46 },
+      { part: "האוזן", x: 33, y: 17 },
+      { part: "יד ימין", x: 24, y: 46 },
+      { part: "יד שמאל", x: 76, y: 46 },
       { part: "הבטן", x: 50, y: 52 },
-      { part: "הרגל", x: 66, y: 68 },
-    ];
+      { part: "רגל ימין", x: 36, y: 70 },
+      { part: "רגל שמאל", x: 66, y: 68 },
+    ]).slice(0, 4);
 
     const patient = root.querySelector("#rcPatient");
     this.wounds = parts.map((p) => {

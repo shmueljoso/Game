@@ -41,9 +41,9 @@ GAMES.traffic = {
 
   cycle() {
     const order = [
-      { color: "red", word: "אדום", ms: 2600 },
-      { color: "green", word: "ירוק", ms: 3000 },
-      { color: "yellow", word: "צהוב", ms: 900 },
+      { color: "red", word: "אדום", ms: () => randBetween(2200, 3400) },
+      { color: "green", word: "ירוק", ms: () => randBetween(2600, 3600) },
+      { color: "yellow", word: "צהוב", ms: () => 900 },
     ];
     let i = 0;
     const step = () => {
@@ -58,7 +58,7 @@ GAMES.traffic = {
       Speech.say(now.word);
       this.root.querySelector("#trWalker").classList.toggle("waving", now.color === "red");
       i++;
-      this.timer = setTimeout(step, now.ms);
+      this.timer = setTimeout(step, now.ms());
     };
     step();
   },

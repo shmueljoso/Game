@@ -42,15 +42,10 @@ GAMES.carwash = {
     `;
 
     /* לכלוך פזור על כל גוף הרכב, בכמה סוגים שונים */
-    /* על גוף הרכב ועל התא - מעל הגלגלים כדי שהלכלוך תמיד ייראה על הצבע */
-    const positions = [
-      { x: 14, y: 57 }, { x: 25, y: 54 }, { x: 37, y: 58 }, { x: 49, y: 55 },
-      { x: 61, y: 58 }, { x: 73, y: 54 }, { x: 86, y: 57 },
-      { x: 33, y: 38 }, { x: 46, y: 34 }, { x: 59, y: 38 },
-    ];
+    const positions = this.scatter();
     const dirtLayer = root.querySelector("#cwDirt");
-    this.spots = shuffle(positions).map((p, i) => {
-      const kind = DIRT_KINDS[i % DIRT_KINDS.length];
+    this.spots = positions.map((p, i) => {
+      const kind = DIRT_KINDS[Math.floor(Math.random() * DIRT_KINDS.length)];
       const d = el("div", `dirt-spot ${kind.kind}`, kind.kind === "leaf" ? "🍂" : "");
       d.style.left = p.x + "%";
       d.style.top = p.y + "%";
@@ -78,6 +73,22 @@ GAMES.carwash = {
       () => sponge.classList.add("active"),
       () => sponge.classList.remove("active")
     );
+  },
+
+  /* פיזור אקראי על גוף הרכב ועל התא, עם מרווח כדי ששני כתמים לא ישבו זה על זה */
+  scatter() {
+    const zones = [
+      { x: [12, 88], y: [52, 62] },
+      { x: [26, 72], y: [32, 44] },
+    ];
+    const spots = [];
+    let guard = 0;
+    while (spots.length < 10 && guard++ < 400) {
+      const zone = zones[spots.length % 2 === 0 ? 0 : Math.random() < 0.6 ? 0 : 1];
+      const p = { x: randBetween(zone.x[0], zone.x[1]), y: randBetween(zone.y[0], zone.y[1]) };
+      if (spots.every((s) => Math.hypot(s.x - p.x, (s.y - p.y) * 0.5) > 9)) spots.push(p);
+    }
+    return spots;
   },
 
   scrub(clientX, clientY, xPct, yPct) {

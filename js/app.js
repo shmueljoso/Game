@@ -20,6 +20,11 @@ const WORLDS = [
   { id: "shapes",   label: "אתר בנייה",  emoji: "🏗️", color: "#ffc98b", roof: "#c97b2e", style: "site",    x: 1180, y: 456 },
   { id: "delivery", label: "משלוחים",    emoji: "📦", color: "#a8d8ff", roof: "#3f7bbf", style: "depot",   x: 1500, y: 458 },
   { id: "puzzle",   label: "פאזל",       emoji: "🧩", color: "#ffe08a", roof: "#e08a2e", style: "toy",     x: 1820, y: 458 },
+
+  /* אזור ג - כיכר העיר */
+  { id: "radio",  label: "רדיו",  emoji: "🎧", color: "#ffc9de", roof: "#c94f86", style: "radio",  x: 2180, y: 256 },
+  { id: "memory", label: "זיכרון", emoji: "🧠", color: "#a8e6dd", roof: "#2f8f86", style: "cards",  x: 2500, y: 252 },
+  { id: "paint",  label: "ציור",  emoji: "🎨", color: "#ffe3b0", roof: "#d98f2e", style: "studio", x: 2820, y: 254 },
 ];
 
 const COINS_PER_WIN = 3;
