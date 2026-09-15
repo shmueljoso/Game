@@ -36,7 +36,7 @@ const Garage = {
     if (isOwned) {
       App.selectCar(car.id);
       Sound.play("star");
-      Speech.say(car.say || car.name, { en: car.latin });
+      Speech.say(car.latin, { forceEn: true });
       this.render();
       return;
     }
@@ -45,7 +45,7 @@ const Garage = {
     if (result === "bought") {
       Sound.play("win");
       App.confetti(30);
-      Speech.say(`קנינו ${car.say || car.name}`, { en: `We bought a ${car.latin}` });
+      Speech.say(car.latin, { forceEn: true, en: `We got a ${car.latin}` });
       this.render();
     } else {
       Sound.play("wrong");

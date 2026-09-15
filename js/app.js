@@ -222,7 +222,8 @@ const App = {
   },
 
   /* בועת דיבור של הדמות המלווה בתוך משחק.
-     opts.say - איך להגות בעברית, opts.en - מה לומר כשיש רק קול אנגלי */
+     opts.say - איך להגות בעברית, opts.en - מה לומר כשיש רק קול אנגלי,
+     opts.forceEn - תמיד להגות באנגלית (לשמות מותגים) */
   saySpeech(parent, text, opts = {}) {
     let bubble = parent.querySelector(".speech-bubble");
     if (!bubble) {
@@ -234,7 +235,7 @@ const App = {
     bubble.classList.remove("pulse");
     void bubble.offsetWidth;
     bubble.classList.add("pulse");
-    Speech.say(opts.say || text, { en: opts.en });
+    Speech.say(opts.say || text, { en: opts.en, forceEn: opts.forceEn });
   },
 };
 

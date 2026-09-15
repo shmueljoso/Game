@@ -77,6 +77,7 @@ GAMES.radio = {
     if (Songs.playing) {
       Songs.stop();
       Sound.play("click");
+      Sound.startMusic(); /* חזרה למוזיקת הרקע הכללית עכשיו שאין שיר */
     } else {
       Songs.play(Songs.index);
     }
@@ -120,7 +121,7 @@ GAMES.radio = {
   },
 
   stop() {
+    /* יוצאים מהרדיו בלי לעצור את השיר - הוא ממשיך לנגן ברקע במשחקים אחרים */
     Songs.onBeat = null;
-    Songs.stop();
   },
 };

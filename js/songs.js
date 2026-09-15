@@ -115,6 +115,8 @@ const Songs = {
   },
 
   play(index) {
+    /* השיר תופס את מקום המוזיקה הכללית - מכבים את הלופ ברגע שהשיר מתחיל */
+    Sound.stopMusic();
     this.stop();
     this.index = (index + this.all().length) % this.all().length;
     const song = this.all()[this.index];

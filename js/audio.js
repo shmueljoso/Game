@@ -157,6 +157,8 @@ const Sound = {
   MUSIC: ["C5", "E5", "G5", "E5", "F5", "A5", "G5", "E5", "D5", "F5", "A5", "F5", "C5", "E5", "G5", "C5"],
 
   startMusic() {
+    /* כששיר מתנגן ברדיו הוא תופס את מקום המוזיקה - לא מנגנים את שניהם יחד */
+    if (typeof Songs !== "undefined" && Songs.playing) return;
     if (!this.ctx) this.init();
     if (!this.ctx || !this.musicOn || this.musicTimer) return;
     const beat = 0.34;
@@ -213,15 +215,22 @@ const Speech = {
     window.speechSynthesis.onvoiceschanged = pick;
   },
 
-  /* text - עברית. opts.en - איך לומר את זה באנגלית, כשזה השם הלועזי של המותג או הדמות */
+  /* text - עברית. opts.en - איך לומר את זה באנגלית, כשזה השם הלועזי של המותג או הדמות.
+     opts.forceEn - תמיד להגות באנגלית (לשמות מותגים כמו טויוטה/BYD), גם כשיש קול עברי -
+     כי שם מותג לועזי נשמע נכון רק בהגייה אנגלית, לא משנה איזה קול המכשיר מעדיף */
   say(text, opts = {}) {
     if (!Sound.sfxOn) return;
-    const hebrew = this.voices.he;
-    const voice = hebrew || this.voices.en;
-    if (!voice) return;
 
-    const phrase = hebrew ? text : opts.en || text;
-    if (!phrase) return;
+    let voice, phrase;
+    if (opts.forceEn && this.voices.en) {
+      voice = this.voices.en;
+      phrase = opts.en || text;
+    } else {
+      const hebrew = this.voices.he;
+      voice = hebrew || this.voices.en;
+      phrase = hebrew ? text : opts.en || text;
+    }
+    if (!voice || !phrase) return;
 
     try {
       window.speechSynthesis.cancel();
