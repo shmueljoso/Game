@@ -1,136 +1,163 @@
-/* משחק שטיפת מכונית: גוררים ספוגית מעל כתמי לכלוך עד שהמכונית נוצצת */
+/* שטיפת רכב: בוחרים רכב מהמוסך, משפשפים לכלוכים מכל הסוגים,
+   סופרים כל אחד בקול, ולסיום שוטפים במים ומקבלים מכונית נוצצת */
 
-const CarWashGame = {
-  dirtSpots: [],
+const DIRT_KINDS = [
+  { kind: "mud", label: "בוץ" },
+  { kind: "dust", label: "אבק" },
+  { kind: "leaf", label: "עלה" },
+  { kind: "splat", label: "כתם" },
+];
+
+GAMES.carwash = {
+  title: "שטיפת רכב 🧽",
+  hint: "שפשפו את הלכלוך",
+  say: "בואו נשטוף את המכונית",
+
+  spots: [],
   cleaned: 0,
-  total: 0,
+  root: null,
+  rinsing: false,
 
-  DIRT_POSITIONS: [
-    { x: 22, y: 30 },
-    { x: 40, y: 50 },
-    { x: 60, y: 28 },
-    { x: 78, y: 48 },
-    { x: 50, y: 62 },
-    { x: 30, y: 68 },
-  ],
-
-  start() {
-    document.getElementById("carwashWin").classList.add("hidden");
+  start(root) {
+    this.root = root;
     this.cleaned = 0;
-    this.total = this.DIRT_POSITIONS.length;
-    this.buildScene();
-    this.renderProgress();
-    this.bindSponge();
-  },
+    this.rinsing = false;
 
-  buildScene() {
-    const scene = document.getElementById("carScene");
-    scene.innerHTML = `
-      <svg class="car-svg" viewBox="0 0 300 160" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="150" cy="148" rx="120" ry="8" fill="#00000022"/>
-        <path d="M40 110 Q40 70 90 65 Q110 40 190 40 Q230 40 245 65 Q270 70 270 110 Z"
-              fill="#4d96ff" stroke="#2d6fd6" stroke-width="3"/>
-        <path d="M105 68 Q120 48 190 48 Q220 48 232 68 Z" fill="#bfe3ff" opacity="0.85"/>
-        <rect x="40" y="100" width="230" height="22" rx="10" fill="#3d7fe0"/>
-        <circle class="wheel" cx="95" cy="128" r="20" fill="#2b2b2b"/>
-        <circle cx="95" cy="128" r="8" fill="#c9c9c9"/>
-        <circle class="wheel" cx="215" cy="128" r="20" fill="#2b2b2b"/>
-        <circle cx="215" cy="128" r="8" fill="#c9c9c9"/>
-        <circle cx="60" cy="95" r="6" fill="#fff6cc"/>
-        <circle cx="248" cy="95" r="6" fill="#ffd1d1"/>
-      </svg>
-      <div class="dirt-layer" id="dirtLayer"></div>
+    root.innerHTML = `
+      <div class="cw-sky"></div>
+      <div class="cw-floor"></div>
+      <div class="cw-arch">
+        <div class="cw-arch-top"></div>
+        <div class="cw-brushes">
+          ${Array.from({ length: 10 }, (_, i) => `<span style="animation-delay:${i * 0.12}s"></span>`).join("")}
+        </div>
+      </div>
+      <div class="car-holder" id="cwCar">
+        ${carSvg(App.currentCar())}
+        <div class="dirt-layer" id="cwDirt"></div>
+      </div>
+      <div class="counter-badge" id="cwCounter">0 מתוך 10</div>
+      <button class="mini-btn" id="cwSwap">🔧 רכב אחר</button>
+      <div class="sponge" id="cwSponge">🧽</div>
     `;
 
-    const layer = document.getElementById("dirtLayer");
-    this.dirtSpots = this.DIRT_POSITIONS.map((pos, i) => {
-      const el = document.createElement("div");
-      el.className = "dirt-spot";
-      el.style.left = pos.x + "%";
-      el.style.top = pos.y + "%";
-      el.dataset.index = i;
-      layer.appendChild(el);
-      return { el, x: pos.x, y: pos.y, clean: false };
+    /* לכלוך פזור על כל גוף הרכב, בכמה סוגים שונים */
+    const positions = this.scatter();
+    const dirtLayer = root.querySelector("#cwDirt");
+    this.spots = positions.map((p, i) => {
+      const kind = DIRT_KINDS[Math.floor(Math.random() * DIRT_KINDS.length)];
+      const d = el("div", `dirt-spot ${kind.kind}`, kind.kind === "leaf" ? "🍂" : "");
+      d.style.left = p.x + "%";
+      d.style.top = p.y + "%";
+      d.style.setProperty("--tilt", randBetween(-50, 50) + "deg");
+      d.style.setProperty("--scale", randBetween(0.8, 1.25));
+      dirtLayer.appendChild(d);
+      return { node: d, clean: false };
     });
+    root.querySelector("#cwCounter").textContent = `0 מתוך ${this.spots.length}`;
+
+    root.querySelector("#cwSwap").addEventListener("click", (e) => {
+      e.stopPropagation();
+      Sound.play("click");
+      Garage.open();
+    });
+
+    const sponge = root.querySelector("#cwSponge");
+    trackPointer(
+      root,
+      (clientX, clientY, xPct, yPct) => {
+        sponge.style.left = xPct + "%";
+        sponge.style.top = yPct + "%";
+        if (!this.rinsing) this.scrub(clientX, clientY, xPct, yPct);
+      },
+      () => sponge.classList.add("active"),
+      () => sponge.classList.remove("active")
+    );
   },
 
-  renderProgress() {
-    const row = document.getElementById("carwashProgress");
-    row.innerHTML = "";
-    for (let i = 0; i < this.total; i++) {
-      const star = document.createElement("span");
-      star.className = "star" + (i < this.cleaned ? " lit" : "");
-      star.textContent = "⭐";
-      row.appendChild(star);
+  /* פיזור אקראי על גוף הרכב ועל התא, עם מרווח כדי ששני כתמים לא ישבו זה על זה */
+  scatter() {
+    const zones = [
+      { x: [12, 88], y: [52, 62] },
+      { x: [26, 72], y: [32, 44] },
+    ];
+    const spots = [];
+    let guard = 0;
+    while (spots.length < 10 && guard++ < 400) {
+      const zone = zones[spots.length % 2 === 0 ? 0 : Math.random() < 0.6 ? 0 : 1];
+      const p = { x: randBetween(zone.x[0], zone.x[1]), y: randBetween(zone.y[0], zone.y[1]) };
+      if (spots.every((s) => Math.hypot(s.x - p.x, (s.y - p.y) * 0.5) > 9)) spots.push(p);
     }
+    return spots;
   },
 
-  bindSponge() {
-    const stage = document.getElementById("carwashStage");
-    const sponge = document.getElementById("sponge");
-
-    const move = (clientX, clientY) => {
-      const rect = stage.getBoundingClientRect();
-      const x = clientX - rect.left;
-      const y = clientY - rect.top;
-      sponge.style.transform = `translate(${x - 28}px, ${y - 28}px)`;
-      this.checkCollisions(clientX, clientY);
-    };
-
-    stage.onpointermove = (e) => move(e.clientX, e.clientY);
-    stage.onpointerdown = (e) => {
-      sponge.classList.add("active");
-      move(e.clientX, e.clientY);
-    };
-    stage.onpointerup = () => sponge.classList.remove("active");
-    stage.onpointerleave = () => sponge.classList.remove("active");
-  },
-
-  checkCollisions(clientX, clientY) {
-    this.dirtSpots.forEach((spot) => {
+  scrub(clientX, clientY, xPct, yPct) {
+    this.spots.forEach((spot) => {
       if (spot.clean) return;
-      const r = spot.el.getBoundingClientRect();
-      const sx = r.left + r.width / 2;
-      const sy = r.top + r.height / 2;
-      const dist = Math.hypot(clientX - sx, clientY - sy);
-      if (dist < 40) this.cleanSpot(spot);
+      const c = centerOf(spot.node);
+      if (distance(clientX, clientY, c.x, c.y) > 42) return;
+
+      spot.clean = true;
+      spot.node.classList.add("gone");
+      this.cleaned++;
+
+      Sound.play("squeak");
+      Sound.tone(420 + this.cleaned * 45, 0.2, { type: "triangle", vol: 0.16 });
+      Speech.say(String(this.cleaned));
+
+      this.bubbles(xPct, yPct);
+      App.popNumber(this.root, xPct, yPct, this.cleaned);
+      this.root.querySelector("#cwCounter").textContent = `${this.cleaned} מתוך ${this.spots.length}`;
+
+      if (this.cleaned === this.spots.length) setTimeout(() => this.rinse(), 500);
     });
   },
 
-  cleanSpot(spot) {
-    spot.clean = true;
-    spot.el.classList.add("gone");
-    this.spawnBubbles(spot.el);
-    this.cleaned++;
-    this.renderProgress();
-    if (this.cleaned >= this.total) {
-      setTimeout(() => this.win(), 400);
+  bubbles(xPct, yPct) {
+    for (let i = 0; i < 7; i++) {
+      const b = el("span", "bubble");
+      b.style.left = xPct + "%";
+      b.style.top = yPct + "%";
+      b.style.setProperty("--dx", randBetween(-40, 40) + "px");
+      b.style.width = b.style.height = randBetween(8, 18) + "px";
+      b.style.animationDelay = Math.random() * 0.2 + "s";
+      this.root.appendChild(b);
+      setTimeout(() => b.remove(), 1100);
     }
   },
 
-  spawnBubbles(atEl) {
-    const layer = document.getElementById("dirtLayer");
-    for (let i = 0; i < 6; i++) {
-      const b = document.createElement("span");
-      b.className = "bubble";
-      b.style.left = atEl.style.left;
-      b.style.top = atEl.style.top;
-      b.style.setProperty("--dx", (Math.random() * 40 - 20) + "px");
-      b.style.animationDelay = Math.random() * 0.15 + "s";
-      layer.appendChild(b);
-      setTimeout(() => b.remove(), 900);
-    }
+  /* שלב סיום: מקלחת מים ואז ברק */
+  rinse() {
+    this.rinsing = true;
+    const root = this.root;
+    root.classList.add("rinsing");
+    Sound.play("splash");
+    App.saySpeech(root, "עכשיו שוטפים במים!");
+
+    let drops = 0;
+    this.dropTimer = setInterval(() => {
+      const d = el("span", "drop");
+      d.style.left = randBetween(14, 86) + "%";
+      d.style.animationDuration = randBetween(0.5, 0.9) + "s";
+      root.appendChild(d);
+      setTimeout(() => d.remove(), 1000);
+      if (++drops % 6 === 0) Sound.play("water");
+    }, 60);
+
+    setTimeout(() => {
+      clearInterval(this.dropTimer);
+      root.classList.remove("rinsing");
+      root.classList.add("shiny");
+      Sound.play("sparkle");
+      for (let i = 0; i < 6; i++) {
+        setTimeout(() => App.sparkleAt(root, randBetween(24, 76), randBetween(35, 70), 5), i * 140);
+      }
+      setTimeout(() => App.finishGame("המכונית נוצצת"), 900);
+    }, 2200);
   },
 
-  win() {
-    document.getElementById("carwashWin").classList.remove("hidden");
-    if (App.profile) {
-      renderCompanion(
-        document.getElementById("carwashWinMascot"),
-        App.profile.companion,
-        "happy"
-      );
-    }
-    App.celebrate();
+  stop() {
+    clearInterval(this.dropTimer);
+    this.rinsing = false;
   },
 };
