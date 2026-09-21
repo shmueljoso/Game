@@ -4,7 +4,7 @@
   "description": "משחקים לגיל הרך: שטיפת רכב, כבאים, גן חיות, רמזור ועוד - עם מוסך רכבים ומטבעות",
   "lang": "he",
   "dir": "rtl",
-  "start_url": "./index.html",
+  "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "landscape",

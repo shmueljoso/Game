@@ -1,11 +1,10 @@
 /* Service worker: שומר את כל המשחק במטמון כדי שיעבוד גם בלי אינטרנט
    ויהיה אפשר להתקין אותו כאפליקציה */
 
-const CACHE = "little-city-v3";
+const CACHE = "little-city-v4";
 
 const ASSETS = [
   "./",
-  "./index.html",
   "./manifest.webmanifest",
   "./css/style.css",
   "./js/audio.js",
@@ -43,7 +42,16 @@ const ASSETS = [
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE).then((cache) => cache.addAll(ASSETS)).then(() => self.skipWaiting())
+    caches
+      .open(CACHE)
+      .then((cache) =>
+        Promise.allSettled(
+          ASSETS.map((url) =>
+            cache.add(url).catch((err) => console.warn("[sw] skipped caching", url, err))
+          )
+        )
+      )
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -70,7 +78,7 @@ self.addEventListener("fetch", (event) => {
           }
           return response;
         })
-        .catch(() => cached);
+        .catch(() => cached || (event.request.mode === "navigate" ? caches.match("./") : undefined));
 
       return cached || fresh;
     })
