@@ -25,6 +25,11 @@ const WORLDS = [
   { id: "radio",  label: "רדיו",  emoji: "🎧", color: "#ffc9de", roof: "#c94f86", style: "radio",  x: 2180, y: 256 },
   { id: "memory", label: "זיכרון", emoji: "🧠", color: "#a8e6dd", roof: "#2f8f86", style: "cards",  x: 2500, y: 252 },
   { id: "paint",  label: "ציור",  emoji: "🎨", color: "#ffe3b0", roof: "#d98f2e", style: "studio", x: 2820, y: 254 },
+
+  /* פינת תינוקות - לגיל שנתיים: מטרות ענקיות, בלי כישלון */
+  { id: "bubbles",  label: "בועות",     emoji: "🫧", color: "#bfe3ff", roof: "#4d96ff", style: "bubbleHut", x: 2180, y: 462 },
+  { id: "peekaboo", label: "מי מתחבא",  emoji: "🙈", color: "#ffe3f0", roof: "#e0568a", style: "cloudHut",  x: 2500, y: 458 },
+  { id: "bigcolors", label: "צבעים",    emoji: "🌈", color: "#fff3c4", roof: "#ffd93d", style: "rainbowHut", x: 2820, y: 460 },
 ];
 
 const COINS_PER_WIN = 3;

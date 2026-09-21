@@ -372,6 +372,33 @@ const BUILDINGS = {
     <path d="M46 -82 L64 -50 L28 -50 Z" fill="#6bcB77"/>
     <rect x="-46" y="-40" width="92" height="40" rx="8" fill="#fff8e8"/>
     <text x="0" y="-8" text-anchor="middle" font-size="36">${w.emoji}</text>`,
+
+  /* אוהל בועות - פינת התינוקות */
+  bubbleHut: (w) => `
+    <path d="M-78 0 L-78 -70 Q0 -132 78 -70 L78 0 Z" fill="${w.color}" stroke="${w.roof}" stroke-width="4"/>
+    <circle cx="-40" cy="-84" r="10" fill="${w.roof}" opacity="0.75"/>
+    <circle cx="10" cy="-104" r="14" fill="${w.roof}" opacity="0.55"/>
+    <circle cx="46" cy="-78" r="9" fill="${w.roof}" opacity="0.65"/>
+    <rect x="-44" y="-46" width="88" height="46" rx="10" fill="#ffffffcc"/>
+    <text x="0" y="-8" text-anchor="middle" font-size="38">${w.emoji}</text>`,
+
+  /* ענן ענק - מי מתחבא */
+  cloudHut: (w) => `
+    <ellipse cx="0" cy="-40" rx="82" ry="46" fill="${w.color}" stroke="${w.roof}" stroke-width="4"/>
+    <ellipse cx="-40" cy="-58" rx="34" ry="26" fill="${w.color}" stroke="${w.roof}" stroke-width="4"/>
+    <ellipse cx="42" cy="-54" rx="30" ry="24" fill="${w.color}" stroke="${w.roof}" stroke-width="4"/>
+    <rect x="-42" y="-40" width="84" height="34" rx="10" fill="#ffffffcc"/>
+    <text x="0" y="-10" text-anchor="middle" font-size="38">${w.emoji}</text>`,
+
+  /* בית קשת בענן - צבעים */
+  rainbowHut: (w) => `
+    <path d="M-76 0 L-76 -50 A76 76 0 0 1 76 -50 L76 0 Z" fill="${w.color}" stroke="${w.roof}" stroke-width="4"/>
+    ${["#ff6b6b", "#ffd93d", "#6bcB77", "#4d96ff", "#b085ff"]
+      .map((c, i) => `<path d="M${-64 + i * 2} -48 A${64 - i * 12} ${64 - i * 12} 0 0 1 ${64 - i * 2} -48"
+                            fill="none" stroke="${c}" stroke-width="7" opacity="0.9"/>`)
+      .join("")}
+    <rect x="-42" y="-34" width="84" height="34" rx="10" fill="#ffffffcc"/>
+    <text x="0" y="-6" text-anchor="middle" font-size="36">${w.emoji}</text>`,
 };
 
 /* ---------- קישוטי נוף ---------- */
