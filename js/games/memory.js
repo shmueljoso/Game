@@ -1,7 +1,13 @@
 /* זיכרון: מוצאים זוגות - רכבים אמיתיים מהמוסך (עם הסמל שלהם) וכלי תחבורה.
    זיכרון, ריכוז, וזיהוי סמלים של יצרני רכב */
 
-const MEMORY_CARDS = ["🚗", "🚒", "🚑", "🚓", "🚌", "🚜", "🚲", "🚁", "⛵", "🚂"];
+/* מצב "הכל מעורבב": כלי תחבורה, חיות, פירות וצעצועים */
+const MEMORY_CARDS = [
+  "🚗", "🚒", "🚑", "🚓", "🚌", "🚜", "🚲", "🚁", "⛵", "🚂", "✈️", "🚀",
+  "🐶", "🐱", "🐰", "🦁", "🐘", "🐸", "🐵", "🐧", "🦒", "🐢", "🐟", "🦋",
+  "🍎", "🍌", "🍓", "🍉", "🍇", "🥕", "🍦", "🧁",
+  "⚽", "🎈", "🧸", "🌈", "⭐", "🌻", "🎁", "🥁", "☂️", "🪁",
+];
 
 GAMES.memory = {
   title: "זיכרון 🧠",
@@ -20,13 +26,11 @@ GAMES.memory = {
     this.locked = false;
     this.found = 0;
 
-    /* קלפים אחרים ובסדר אחר בכל משחק: 3 רכבים מצולמים ועוד כלי תחבורה אחד */
-    const photoCars = shuffle(CARS.filter((c) => c.photo)).slice(0, this.pairs - 1);
-    const emojis = shuffle(MEMORY_CARDS).slice(0, this.pairs - photoCars.length);
-    const picks = [
-      ...photoCars.map((c) => ({ key: c.id, car: c })),
-      ...emojis.map((e) => ({ key: e, emoji: e })),
-    ];
+    /* שני מצבים: רק הרכבים המצולמים מהמוסך, או הכל מעורבב. קלפים אחרים בכל משחק */
+    const carsMode = this.mode() === "cars";
+    const picks = carsMode
+      ? shuffle(CARS.filter((c) => c.photo)).slice(0, this.pairs).map((c) => ({ key: c.id, car: c }))
+      : shuffle(MEMORY_CARDS).slice(0, this.pairs).map((e) => ({ key: e, emoji: e }));
     const deck = shuffle([...picks, ...picks]);
 
     root.innerHTML = `
@@ -42,7 +46,17 @@ GAMES.memory = {
           .join("")}
       </div>
       <div class="counter-badge" id="mmCounter">0 מתוך ${this.pairs}</div>
+      <button class="mini-btn" id="mmMode">${carsMode ? "🎨 הכל מעורבב" : "🚗 רק רכבים"}</button>
     `;
+
+    root.querySelector("#mmMode").addEventListener("click", (e) => {
+      e.stopPropagation();
+      App.profile.memoryMode = carsMode ? "mixed" : "cars";
+      App.saveProfile();
+      Sound.play("whoosh");
+      App.replayGame();
+      Speech.say(carsMode ? "הכל מעורבב!" : "רק רכבים!");
+    });
 
     root.querySelectorAll(".mem-card").forEach((card) => {
       card.addEventListener("click", () => this.flip(card));
@@ -88,6 +102,10 @@ GAMES.memory = {
       card.classList.remove("open");
       this.locked = false;
     }, 1100);
+  },
+
+  mode() {
+    return (App.profile && App.profile.memoryMode) || "cars";
   },
 
   /* צד הרכב בקלף: הסמל גדול למעלה והצילום מתחתיו */

@@ -4,12 +4,14 @@
 const ROAD_PATH =
   "M -60 352 C 140 296, 300 420, 500 384 C 700 348, 830 300, 1060 344 " +
   "C 1260 388, 1420 300, 1620 352 C 1790 396, 1900 330, 2060 356 " +
-  "C 2240 380, 2400 306, 2620 350 C 2800 386, 2920 330, 3060 352";
+  "C 2240 380, 2400 306, 2620 350 C 2800 386, 2920 330, 3060 352 " +
+  "C 3240 380, 3400 306, 3620 350 C 3800 386, 3920 330, 4060 352";
 
 const AREAS = [
   { name: "עיר הרכבים" },
   { name: "הפארק" },
   { name: "כיכר העיר" },
+  { name: "פינת החיות" },
 ];
 
 const City = {
@@ -45,7 +47,7 @@ const City = {
         </defs>
 
         <g class="world" id="cityWorld">
-          <rect x="-60" y="-60" width="3120" height="720" fill="url(#sky)" data-egg="ground"/>
+          <rect x="-60" y="-60" width="4120" height="720" fill="url(#sky)" data-egg="ground"/>
           <text class="plane" font-size="40" data-egg="plane">✈️</text>
 
           <g class="sun-group" data-egg="sun">
@@ -81,6 +83,7 @@ const City = {
           ${cloud(1320, 90, 1.0)} ${cloud(1760, 120, 1.15)}
           ${cloud(2260, 100, 1.05)} ${cloud(2760, 74, 0.9)}
           ${balloons(2620, 156)}
+          ${cloud(3240, 92, 1.0)} ${cloud(3760, 128, 1.1)} ${kite(3500, 120)}
 
           <g class="birds" data-egg="birds">
             <rect x="-10" y="-20" width="92" height="56" fill="transparent"/>
@@ -91,10 +94,12 @@ const City = {
           <path d="M-60 330 Q 120 250 300 318 Q 470 250 640 312 Q 820 248 1000 322
                    Q 1180 252 1360 316 Q 1540 250 1720 314 Q 1900 250 2060 320
                    Q 2240 252 2420 316 Q 2600 250 2780 314 Q 2940 252 3060 320
-                   L3060 620 L-60 620 Z" fill="url(#hillBack)" data-egg="ground"/>
+                   Q 3240 252 3420 316 Q 3600 250 3780 314 Q 3940 252 4060 320
+                   L4060 620 L-60 620 Z" fill="url(#hillBack)" data-egg="ground"/>
           <path d="M-60 356 Q 200 300 420 352 Q 660 300 1000 358
                    Q 1300 302 1560 356 Q 1820 300 2060 358
-                   Q 2320 302 2580 356 Q 2840 300 3060 358 L3060 620 L-60 620 Z" fill="url(#grass)" data-egg="ground"/>
+                   Q 2320 302 2580 356 Q 2840 300 3060 358
+                   Q 3320 302 3580 356 Q 3840 300 4060 358 L4060 620 L-60 620 Z" fill="url(#grass)" data-egg="ground"/>
 
           <path d="${ROAD_PATH}" fill="none" stroke="#5d5d69" stroke-width="66" stroke-linecap="round"/>
           <path d="${ROAD_PATH}" fill="none" stroke="#72727f" stroke-width="58" stroke-linecap="round"/>
@@ -115,11 +120,15 @@ const City = {
           ${tree(2340, 250, 0.72)} ${tree(2660, 248, 0.7)} ${tree(2990, 252, 0.7)}
           ${tree(2060, 508, 0.85)} ${tree(2340, 512, 0.92)} ${tree(2660, 506, 0.85)} ${tree(2990, 510, 0.9)}
           ${fountain(2500, 500)}
+          ${tree(3060, 508, 0.85)} ${tree(3500, 252, 0.72)} ${tree(3990, 252, 0.7)} ${tree(3990, 510, 0.9)}
+          ${flowers(3140, 470)} ${flowers(3860, 466)}
+          ${bench(3860, 556)}
+          ${farm(3500, 444)}
           ${flowers(60, 470)} ${flowers(640, 470)} ${flowers(1060, 470)} ${flowers(1700, 466)}
           ${flowers(2140, 470)} ${flowers(2860, 466)}
           ${lamp(340, 424)} ${lamp(1040, 420)} ${lamp(1700, 424)} ${lamp(2320, 424)} ${lamp(2760, 420)}
           ${bench(640, 556)} ${bench(1340, 556)} ${bench(2260, 556)} ${bench(2740, 556)}
-          ${butterfly(120, 450, 0)} ${butterfly(1120, 440, 3)} ${butterfly(2180, 450, 6)}
+          ${butterfly(120, 450, 0)} ${butterfly(1120, 440, 3)} ${butterfly(2180, 450, 6)} ${butterfly(3160, 450, 2)}
           <g id="eggLayer"></g>
 
           <g id="hotspots"></g>
@@ -173,6 +182,13 @@ const City = {
       stage.querySelector("#cityWorld").appendChild(car);
     });
 
+    this.myCar = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    this.myCar.setAttribute("class", "road-car my-car");
+    this.myCar.dataset.egg = "mycar";
+    this.myCar.style.offsetPath = `path("${ROAD_PATH}")`;
+    stage.querySelector("#cityWorld").appendChild(this.myCar);
+    this.refreshMyCar();
+
     stage.querySelector("#cityWorld").addEventListener("click", (e) => {
       if (e.target.closest(".hotspot")) return;
       const target = e.target.closest("[data-egg]");
@@ -207,6 +223,13 @@ const City = {
     if (!svg) return;
     const wideEnough = window.innerWidth / window.innerHeight >= 1000 / 600;
     svg.setAttribute("preserveAspectRatio", wideEnough ? "xMidYMid slice" : "xMidYMax meet");
+  },
+
+  /* המכונית שהילד בחר במוסך נוסעת גם היא על כביש העיר */
+  refreshMyCar() {
+    if (!this.myCar || !App.profile) return;
+    const art = carSvg(App.currentCar()).replace('<svg viewBox="0 0 360 190" class="car-svg', '<svg x="-46" y="-40" width="92" height="49" viewBox="0 0 360 190" class="road-mini');
+    this.myCar.innerHTML = `<rect x="-46" y="-40" width="92" height="49" fill="transparent"/>${art}`;
   },
 
   refreshStars() {
@@ -410,6 +433,32 @@ const BUILDINGS = {
     <rect x="-42" y="-40" width="84" height="34" rx="10" fill="#ffffffcc"/>
     <text x="0" y="-10" text-anchor="middle" font-size="38">${w.emoji}</text>`,
 
+  /* תיאטרון צלליות - פנס מאיר ועל המסך צל של כלב */
+  shadowHut: (w) => `
+    <rect x="-80" y="-102" width="160" height="102" rx="12" fill="${w.color}" stroke="${w.roof}" stroke-width="4"/>
+    <path d="M-88 -102 Q0 -146 88 -102 Z" fill="${w.roof}"/>
+    <rect x="-56" y="-82" width="112" height="62" rx="8" fill="#fff8e8" stroke="${w.roof}" stroke-width="3"/>
+    <text x="0" y="-34" text-anchor="middle" font-size="40" style="filter:brightness(0) opacity(0.75)">🐶</text>
+    <circle cx="-64" cy="-118" r="9" fill="#ffe27a"/>
+    <path d="M-60 -112 L-20 -82 L-56 -82 Z" fill="#ffe27a" opacity="0.5"/>
+    <rect x="-40" y="-16" width="80" height="16" rx="6" fill="#ffffffcc"/>
+    <text x="0" y="-2" text-anchor="middle" font-size="16">${w.emoji}</text>`,
+
+  /* בית מרחץ - אמבטיה עם קצף ובועות */
+  bathHouse: (w) => `
+    <rect x="-78" y="-96" width="156" height="96" rx="14" fill="${w.color}" stroke="${w.roof}" stroke-width="4"/>
+    <path d="M-86 -96 L0 -136 L86 -96 Z" fill="${w.roof}"/>
+    <circle cx="-40" cy="-112" r="9" fill="#ffffff" opacity="0.9"/>
+    <circle cx="36" cy="-124" r="12" fill="#ffffff" opacity="0.8"/>
+    <circle cx="60" cy="-104" r="7" fill="#ffffff" opacity="0.9"/>
+    <text x="0" y="-36" text-anchor="middle" font-size="40">🐘</text>
+    <path d="M-60 -38 L60 -38 L52 -6 Q0 6 -52 -6 Z" fill="#ffffff" stroke="${w.roof}" stroke-width="3"/>
+    <g fill="#ffffff">
+      <circle cx="-44" cy="-40" r="9"/><circle cx="-24" cy="-44" r="11"/><circle cx="0" cy="-41" r="9"/>
+      <circle cx="22" cy="-45" r="11"/><circle cx="44" cy="-40" r="9"/>
+    </g>
+    <text x="0" y="-12" text-anchor="middle" font-size="18">${w.emoji}</text>`,
+
   /* בית קשת בענן - צבעים */
   rainbowHut: (w) => `
     <path d="M-76 0 L-76 -50 A76 76 0 0 1 76 -50 L76 0 Z" fill="${w.color}" stroke="${w.roof}" stroke-width="4"/>
@@ -517,6 +566,28 @@ function kite(x, y) {
       <path d="M0 -26 L22 0 L0 30 L-22 0 Z" fill="#ff8fab" stroke="#ffffff" stroke-width="2"/>
       <path d="M0 30 q10 18 -4 28 q14 10 2 26" stroke="#ffffff" stroke-width="2.5" fill="none"/>
     </g></g>`;
+}
+
+/* חווה קטנה: גדר וחיות שאפשר לגעת בהן */
+function farm(x, y) {
+  const animals = [
+    { e: "🐑", dx: -120, dy: 12 }, { e: "🐄", dx: -20, dy: 22 }, { e: "🐓", dx: 90, dy: 8 },
+    { e: "🐖", dx: 170, dy: 20 }, { e: "🐐", dx: -210, dy: 18 },
+  ];
+  return `
+    <g transform="translate(${x},${y})">
+      <g stroke="#c99457" stroke-width="6" stroke-linecap="round">
+        <line x1="-260" y1="0" x2="240" y2="0"/><line x1="-260" y1="22" x2="240" y2="22"/>
+        ${Array.from({ length: 11 }, (_, i) => `<line x1="${-250 + i * 48}" y1="-10" x2="${-250 + i * 48}" y2="34"/>`).join("")}
+      </g>
+      ${animals.map((a, i) => `
+        <g data-egg="farm" data-animal="${a.e}" transform="translate(${a.dx},${a.dy + 34})">
+          <g class="egg-body graze" style="animation-delay:-${i * 0.7}s">
+            <rect x="-26" y="-40" width="52" height="46" fill="transparent"/>
+            <text x="0" y="0" text-anchor="middle" font-size="40">${a.e}</text>
+          </g>
+        </g>`).join("")}
+    </g>`;
 }
 
 /* פרפר שמתעופף כל הזמן מעל הפרחים */

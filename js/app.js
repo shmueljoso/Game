@@ -30,6 +30,10 @@ const WORLDS = [
   { id: "bubbles",  label: "בועות",     emoji: "🫧", color: "#bfe3ff", roof: "#4d96ff", style: "bubbleHut", x: 2180, y: 462 },
   { id: "peekaboo", label: "מי מתחבא",  emoji: "🙈", color: "#ffe3f0", roof: "#e0568a", style: "cloudHut",  x: 2500, y: 458 },
   { id: "bigcolors", label: "צבעים",    emoji: "🌈", color: "#fff3c4", roof: "#ffd93d", style: "rainbowHut", x: 2820, y: 460 },
+
+  /* אזור ד - פינת החיות */
+  { id: "shadows", label: "צלליות",       emoji: "👤", color: "#ffe6c7", roof: "#8a5a3c", style: "shadowHut", x: 3260, y: 256 },
+  { id: "bath",    label: "אמבטיה לחיות", emoji: "🫧", color: "#cdeeff", roof: "#3f9ac9", style: "bathHouse", x: 3740, y: 256 },
 ];
 
 const COINS_PER_WIN = 3;
@@ -142,6 +146,7 @@ const App = {
     this.showScreen("city");
     this.paintProfile();
     City.refreshStars();
+    City.refreshMyCar();
     Sound.startMusic();
   },
 

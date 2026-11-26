@@ -29,6 +29,14 @@ const Eggs = {
     { emoji: "🐻", say: "שלום, אני דובי" },
   ],
 
+  farmAnimals: {
+    "🐑": { say: "מֶה מֶה!", s: () => Sound.melody([500, 470, 500, 470], { gap: 0.08, type: "triangle", vol: 0.12 }) },
+    "🐄": { say: "מוּ!", s: () => Sound.tone(200, 0.6, { type: "sawtooth", slideTo: 140, vol: 0.12 }) },
+    "🐓": { say: "קוקוריקו!", s: () => Sound.melody([600, 800, 1000, 700], { gap: 0.1, type: "square", vol: 0.08 }) },
+    "🐖": { say: "אוינק אוינק!", s: () => Sound.melody([300, 240, 300], { gap: 0.1, type: "sawtooth", vol: 0.1 }) },
+    "🐐": { say: "מֶה!", s: () => Sound.melody([450, 430, 450], { gap: 0.09, type: "triangle", vol: 0.12 }) },
+  },
+
   planted: [],
 
   pick(list) {
@@ -180,6 +188,25 @@ const Eggs = {
         this.spawn(p.x, p.y, "👋", "float", 30);
         this.say("plane");
         break;
+
+      case "farm": {
+        const a = node.dataset.animal;
+        const f = this.farmAnimals[a] || { say: "שלום!", s: () => Sound.play("pop") };
+        this.replay(body, "egg-hop");
+        f.s();
+        Speech.say(f.say);
+        this.spawn(p.x, p.y - 30, "💕", "float", 24);
+        break;
+      }
+
+      case "mycar": {
+        const car = App.currentCar();
+        this.replay(node, "egg-honk");
+        Sound.play("honk");
+        this.spawn(p.x, p.y - 20, "⭐", "float", 26);
+        Speech.say(car.model ? `${car.latin} ${car.model}` : car.latin, { forceEn: true });
+        break;
+      }
 
       case "ground":
         this.ground(p);

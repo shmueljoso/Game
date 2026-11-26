@@ -1,7 +1,7 @@
 /* Service worker: שומר את כל המשחק במטמון כדי שיעבוד גם בלי אינטרנט
    ויהיה אפשר להתקין אותו כאפליקציה */
 
-const CACHE = "little-city-v7";
+const CACHE = "little-city-v8";
 
 const ASSETS = [
   "./",
@@ -33,6 +33,8 @@ const ASSETS = [
   "./js/games/bubbles.js",
   "./js/games/peekaboo.js",
   "./js/games/bigcolors.js",
+  "./js/games/shadows.js",
+  "./js/games/bath.js",
   "./js/songs.js",
   "./js/kidmode.js",
   "./js/timer.js",
