@@ -122,11 +122,12 @@ const App = {
   showScreen(name) {
     document.querySelectorAll(".screen").forEach((s) => s.classList.add("hidden"));
     document.getElementById(`screen-${name}`).classList.remove("hidden");
+    document.body.dataset.screen = name;
   },
 
   paintProfile() {
     if (!this.profile) return;
-    ["cityMascot", "gameMascot", "nameMascot"].forEach((id) => {
+    ["cityMascot", "gameMascot", "nameMascot", "rotateMascot"].forEach((id) => {
       const elm = document.getElementById(id);
       if (elm) renderCompanion(elm, this.profile.companion, "idle");
     });

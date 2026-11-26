@@ -92,6 +92,16 @@ function bindUI() {
   });
   window.addEventListener("appinstalled", () => installBtn.classList.add("hidden"));
 
+  /* כשמחזיקים את הטלפון לאורך מופיע מסך "מסובבים" - והדמות גם אומרת את זה */
+  const portrait = window.matchMedia("(orientation: portrait) and (max-aspect-ratio: 3/4)");
+  const onTurn = () => {
+    const screen = document.body.dataset.screen;
+    if (portrait.matches && screen !== "select" && screen !== "name") {
+      Speech.say("הופה! מסובבים את הטלפון");
+    }
+  };
+  portrait.addEventListener("change", onTurn);
+
   /* הדפדפן מרשה סאונד רק אחרי נגיעה ראשונה של המשתמש */
   const wake = () => {
     Sound.init();

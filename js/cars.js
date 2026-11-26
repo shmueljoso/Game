@@ -8,6 +8,7 @@ const CARS = [
   { id: "kia",     name: "קיה",    latin: "Kia",     say: "קיה",         type: "hatch",   color: "#9b6ede", price: 5 },
   { id: "hyundai", name: "יונדאי", latin: "Hyundai", say: "יונדאי",      type: "suv",     color: "#cdd3db", price: 7 },
   { id: "skoda",   name: "סקודה",  latin: "Skoda",   say: "סקודה",       type: "wagon",   color: "#2f9e63", price: 9 },
+  { id: "honda",   name: "הונדה",  latin: "Honda",   say: "הונדה",       type: "sedan",   color: "#8fa3b8", price: 10 },
   { id: "geely",   name: "ג'ילי",  latin: "Geely",   say: "ג׳ילי",       type: "sedan",   color: "#f2921d", price: 12 },
   { id: "nissan",  name: "ניסאן",  latin: "Nissan",  say: "ניסאן",       type: "suv",     color: "#24486f", price: 14 },
   { id: "byd",     name: "BYD",    latin: "BYD",     say: "בי וואי די",  type: "sport",   color: "#19bcd0", price: 16 },
@@ -118,22 +119,8 @@ function carSvg(car, opts = {}) {
         ).join("")
       : "";
 
-  /* תג מקורי בסגנון אמבלם רכב - האות הראשונה של השם בתוך מגן.
-     במכוון לא שכפול של הלוגו האמיתי של אף יצרן */
-  const badgeX = (s.cabinLeft + s.cabinRight) / 2 + 6;
-  const badgeY = s.bodyTop + 30;
-  const emblem = `
-    <g class="car-badge">
-      <path d="M${badgeX - 15} ${badgeY - 14} L${badgeX + 15} ${badgeY - 14} L${badgeX + 15} ${badgeY + 4}
-               Q${badgeX} ${badgeY + 20} ${badgeX - 15} ${badgeY + 4} Z"
-            fill="#ffffff" stroke="${dark}" stroke-width="2.5" stroke-linejoin="round"/>
-      <text x="${badgeX}" y="${badgeY + 5}" text-anchor="middle" font-size="17" font-weight="800"
-            font-family="Segoe UI, Tahoma, sans-serif" fill="${dark}">${(car.latin || "?")[0]}</text>
-      ${Logos.have.has(car.id)
-        ? `<image href="logos/${car.id}.png" x="${badgeX - 13}" y="${badgeY - 12}" width="26" height="26"
-                 preserveAspectRatio="xMidYMid meet"/>`
-        : ""}
-    </g>`;
+  /* הסמל של היצרן, גדול ובולט על דלת הרכב בתוך עיגול לבן - שילד יזהה אותו מרחוק */
+  const emblem = brandEmblem(car, s, bodyBottom, dark);
 
   const spoiler =
     car.type === "sport"
@@ -157,10 +144,43 @@ function carSvg(car, opts = {}) {
     ${bed}
     <rect x="${s.bodyLeft + 4}" y="${s.bodyTop + 26}" width="18" height="12" rx="6" fill="#fff4c2"/>
     <rect x="${s.bodyRight - 22}" y="${s.bodyTop + 26}" width="18" height="12" rx="6" fill="#ffc9c9"/>
-    <rect x="${(s.cabinLeft + s.cabinRight) / 2 - 4}" y="${s.bodyTop + 4}" width="8" height="10" rx="4" fill="${dark}"/>
     ${emblem}
     ${wheels}
   </svg>`;
+}
+
+function brandEmblem(car, s, bodyBottom, dark) {
+  const cx = (s.bodyLeft + s.bodyRight) / 2;
+  const cy = s.bodyTop + (bodyBottom - s.bodyTop) / 2 + 3;
+  const r = Math.min(33, (bodyBottom - s.bodyTop) / 2 + 9);
+  const ring = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#ffffff" stroke="${dark}" stroke-width="3"/>`;
+
+  let mark = "";
+  const logo = typeof BRAND_LOGOS !== "undefined" && BRAND_LOGOS[car.id];
+  if (Logos.have.has(car.id)) {
+    mark = `<image href="logos/${car.id}.png" x="${cx - r * 0.8}" y="${cy - r * 0.8}" width="${r * 1.6}" height="${r * 1.6}"
+              preserveAspectRatio="xMidYMid meet"/>`;
+  } else if (logo) {
+    const size = r * 1.5;
+    mark = `<g transform="translate(${cx - size / 2} ${cy - size / 2}) scale(${size / 24})">
+              <path d="${logo.path}" fill="${logo.color}"/></g>`;
+  } else if (car.id === "byd") {
+    mark = `<rect x="${cx - r * 0.82}" y="${cy - r * 0.42}" width="${r * 1.64}" height="${r * 0.84}" rx="${r * 0.42}"
+              fill="none" stroke="#c8102e" stroke-width="2.5"/>
+            <text x="${cx}" y="${cy + r * 0.2}" text-anchor="middle" font-size="${r * 0.6}" font-weight="900"
+              font-family="Arial, sans-serif" fill="#c8102e" letter-spacing="1">BYD</text>`;
+  } else if (car.id === "geely") {
+    const w = r * 0.7;
+    mark = `<path d="M${cx - w} ${cy - w} L${cx + w} ${cy - w} L${cx + w} ${cy + w * 0.2}
+              Q${cx + w} ${cy + w * 0.9} ${cx} ${cy + w * 1.15} Q${cx - w} ${cy + w * 0.9} ${cx - w} ${cy + w * 0.2} Z"
+              fill="#1d4f91"/>
+            <text x="${cx}" y="${cy + w * 0.45}" text-anchor="middle" font-size="${w * 1.3}" font-weight="900"
+              font-family="Arial, sans-serif" fill="#ffffff">G</text>`;
+  } else {
+    const icon = { racer: "⚡", bus: "🚌", truck: "📦", monster: "👾" }[car.id] || "⭐";
+    mark = `<text x="${cx}" y="${cy + r * 0.38}" text-anchor="middle" font-size="${r * 1.1}">${icon}</text>`;
+  }
+  return `<g class="car-badge">${ring}${mark}</g>`;
 }
 
 function getCar(id) {
