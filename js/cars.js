@@ -3,17 +3,17 @@
 /* name - מה שכתוב על המסך, latin - מה שכתוב על תג הרכב ומה שאומרים בקול אנגלי,
    say - איות עברי שגורם לקול העברי להגות את השם נכון */
 const CARS = [
-  { id: "toyota",  name: "טויוטה", latin: "Toyota",  say: "טויוטה",      type: "hatch",   color: "#e8443b", price: 0 },
+  { id: "toyota",  name: "טויוטה", latin: "Toyota",  say: "טויוטה",      type: "hatch",   color: "#e8443b", price: 0, photo: "cars/toyota.webp", ratio: 2.67 },
   { id: "mazda",   name: "מאזדה",  latin: "Mazda",   say: "מזדה",        type: "sedan",   color: "#2f6fd0", price: 3 },
   { id: "kia",     name: "קיה",    latin: "Kia",     say: "קיה",         type: "hatch",   color: "#9b6ede", price: 5 },
-  { id: "hyundai", name: "יונדאי", latin: "Hyundai", say: "יונדאי",      type: "suv",     color: "#cdd3db", price: 7 },
-  { id: "skoda",   name: "סקודה",  latin: "Skoda",   say: "סקודה",       type: "wagon",   color: "#2f9e63", price: 9 },
-  { id: "honda",   name: "הונדה",  latin: "Honda",   say: "הונדה",       type: "sedan",   color: "#8fa3b8", price: 10 },
-  { id: "geely",   name: "ג'ילי",  latin: "Geely",   say: "ג׳ילי",       type: "sedan",   color: "#f2921d", price: 12 },
+  { id: "hyundai", name: "יונדאי", latin: "Hyundai", say: "יונדאי",      type: "suv",     color: "#cdd3db", price: 7, photo: "cars/hyundai.webp", ratio: 2.69 },
+  { id: "skoda",   name: "סקודה",  latin: "Skoda",   say: "סקודה",       type: "wagon",   color: "#2f9e63", price: 9, photo: "cars/skoda.webp", ratio: 2.71 },
+  { id: "honda",   name: "הונדה",  latin: "Honda",   say: "הונדה",       type: "sedan",   color: "#8fa3b8", price: 10, photo: "cars/honda.webp", ratio: 2.87 },
+  { id: "geely",   name: "ג'ילי",  latin: "Geely",   say: "ג׳ילי",       type: "sedan",   color: "#f2921d", price: 12, photo: "cars/geely.webp", ratio: 2.58 },
   { id: "nissan",  name: "ניסאן",  latin: "Nissan",  say: "ניסאן",       type: "suv",     color: "#24486f", price: 14 },
-  { id: "byd",     name: "BYD",    latin: "BYD",     say: "בי וואי די",  type: "sport",   color: "#19bcd0", price: 16 },
+  { id: "byd",     name: "BYD",    latin: "BYD",     say: "בי וואי די",  type: "sport",   color: "#19bcd0", price: 16, photo: "cars/byd.webp", ratio: 2.59 },
   { id: "ford",    name: "פורד",   latin: "Ford",    say: "פורד",        type: "pickup",  color: "#1f7a8c", price: 18 },
-  { id: "jeep",    name: "ג'יפ",   latin: "Jeep",    say: "ג׳יפ",        type: "jeep",    color: "#7d8b46", price: 20 },
+  { id: "jeep",    name: "ג'יפ",   latin: "Jeep",    say: "ג׳יפ",        type: "jeep",    color: "#7d8b46", price: 20, photo: "cars/jeep.webp", ratio: 2.35 },
   { id: "tesla",   name: "טסלה",   latin: "Tesla",   say: "טסלה",        type: "sport",   color: "#f4f6f8", price: 22 },
   { id: "racer",   name: "מכונית מרוץ", latin: "Racer", say: "מכונית מרוץ", type: "sport", color: "#ffd21e", price: 25 },
   { id: "bus",     name: "אוטובוס", latin: "Bus",    say: "אוטובוס",     type: "van",     color: "#f2b807", price: 28 },
@@ -60,7 +60,23 @@ function shade(hex, amount) {
   return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
 }
 
+/* רכב עם צילום אמיתי (תיקיית cars, רקע שקוף, החזית שמאלה) - באותו גודל של הציור,
+   כך שהשטיפה, הפאזל והמרוץ עובדים איתו בדיוק כמו עם רכב מצויר */
+function carPhotoSvg(car) {
+  /* ממרכזים את הרכב לגובה (גם בשביל חלקי הפאזל) ומניחים את הצל בדיוק מתחת לגלגלים */
+  const w = 344;
+  const h = Math.min(176, w / (car.ratio || 2.6));
+  const y = (190 - h) / 2 + 4;
+  return `
+  <svg viewBox="0 0 360 190" class="car-svg car-photo" xmlns="http://www.w3.org/2000/svg">
+    <ellipse cx="180" cy="${y + h - 3}" rx="150" ry="9" fill="#00000026"/>
+    <image href="${car.photo}" x="8" y="${y}" width="${w}" height="${h}" preserveAspectRatio="xMidYMid meet"/>
+    ${emblemAt(car, 34, 30, 24, "#8a94a3")}
+  </svg>`;
+}
+
 function carSvg(car, opts = {}) {
+  if (car.photo) return carPhotoSvg(car);
   const s = BODY_SPECS[car.type];
   const dark = shade(car.color, -45);
   const light = shade(car.color, 38);
@@ -153,6 +169,10 @@ function brandEmblem(car, s, bodyBottom, dark) {
   const cx = (s.bodyLeft + s.bodyRight) / 2;
   const cy = s.bodyTop + (bodyBottom - s.bodyTop) / 2 + 3;
   const r = Math.min(33, (bodyBottom - s.bodyTop) / 2 + 9);
+  return emblemAt(car, cx, cy, r, dark);
+}
+
+function emblemAt(car, cx, cy, r, dark) {
   const ring = `<circle cx="${cx}" cy="${cy}" r="${r}" fill="#ffffff" stroke="${dark}" stroke-width="3"/>`;
 
   let mark = "";

@@ -545,6 +545,8 @@ html, body {
 }
 .racer.player { width: calc(var(--u) * 22); }
 .racer.player .car-svg { width: 100%; height: auto; filter: drop-shadow(0 0 6px var(--c, #fff)); }
+/* הרכב משוקף כדי לנסוע ימינה - משקפים את הסמל בחזרה כדי שייקרא נכון */
+.racer.player .car-badge { transform: scaleX(-1); transform-box: fill-box; transform-origin: center; }
 .racer.boost { animation: carBump 0.22s ease; }
 @keyframes carBump {
   0% { transform: translateY(-50%) scaleX(-1) scale(1); }
