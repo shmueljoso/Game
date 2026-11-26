@@ -47,7 +47,8 @@ function bindUI() {
 
   document.getElementById("garageBack").addEventListener("click", () => {
     Sound.play("click");
-    App.goCity();
+    if (Garage.returnTo) App.openGame(Garage.returnTo);
+    else App.goCity();
   });
 
   document.getElementById("backBtn").addEventListener("click", () => {
@@ -91,6 +92,16 @@ function bindUI() {
   });
   window.addEventListener("appinstalled", () => installBtn.classList.add("hidden"));
 
+  /* כשמחזיקים את הטלפון לאורך מופיע מסך "מסובבים" - והדמות גם אומרת את זה */
+  const portrait = window.matchMedia("(orientation: portrait) and (max-aspect-ratio: 3/4)");
+  const onTurn = () => {
+    const screen = document.body.dataset.screen;
+    if (portrait.matches && screen !== "select" && screen !== "name") {
+      Speech.say("הופה! מסובבים את הטלפון");
+    }
+  };
+  portrait.addEventListener("change", onTurn);
+
   /* הדפדפן מרשה סאונד רק אחרי נגיעה ראשונה של המשתמש */
   const wake = () => {
     Sound.init();
@@ -112,6 +123,7 @@ if ("serviceWorker" in navigator) {
 document.addEventListener("DOMContentLoaded", () => {
   Speech.init();
   KidMode.init();
+  PlayTimer.init();
   Songs.loadFolder();
   Logos.load();
   App.profile = App.loadProfile();

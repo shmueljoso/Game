@@ -59,11 +59,11 @@
       </button>
       <div class="hud-side">
         <button class="icon-btn install-btn hidden" id="installBtn" aria-label="התקנת האפליקציה">📲</button>
+        <button class="icon-btn timer-btn" id="timerBtn" aria-label="טיימר משחק">⏰</button>
         <button class="icon-btn kid-lock" id="kidLockBtn" aria-label="מצב ילד">🔓</button>
         <button class="icon-btn" id="musicBtn" aria-label="מוזיקה">🎵</button>
       </div>
     </div>
-    <div class="rotate-hint">📱 סובבו את הטלפון כדי לשחק בגדול</div>
   </section>
 
   <!-- מסך 4: משחק (מסך מלא) -->
@@ -118,14 +118,61 @@
     </div>
   </div>
 
+  <!-- טיימר הורים: שעון בראש המסך, חלון בחירה ומסך סיום -->
+  <div class="timer-chip hidden" id="timerChip">
+    <span class="tc-clock">⏰</span><span class="tc-time">0:00</span>
+    <span class="tc-bar"><span></span></span>
+  </div>
+
+  <div class="win-overlay hidden" id="timerPanel">
+    <div class="win-card timer-card">
+      <h2>⏰ כמה זמן משחקים?</h2>
+      <p class="tip-text">בסוף הזמן המשחק ייעצר ויופיע מסך "זהו להיום". רק מבוגר יכול לסגור אותו - בלחיצה ארוכה.</p>
+      <div class="timer-choices" id="timerChoices"></div>
+      <button class="btn-secondary wide hidden" id="timerOff">לבטל את הטיימר</button>
+      <button class="btn-text" id="timerClose">סגירה</button>
+    </div>
+  </div>
+
+  <div class="timer-end hidden" id="timerEnd">
+    <div class="te-sky">
+      <span class="te-moon">🌙</span>
+      <span class="te-star s1">⭐</span><span class="te-star s2">✨</span><span class="te-star s3">⭐</span>
+      <span class="te-star s4">✨</span><span class="te-star s5">🌟</span>
+    </div>
+    <div class="te-mascot" id="timerEndMascot"></div>
+    <h2 class="te-title">זהו להיום! 👋</h2>
+    <p class="te-text" id="timerEndText">נתראה בפעם הבאה!</p>
+    <button class="te-btn" id="timerEndBtn"><span class="te-fill"></span><span class="te-label">🔒 להורים: החזיקו לסגירה</span></button>
+  </div>
+
+  <!-- בטלפון לאורך: מסך חמוד שמבקש לסובב (המשחקים בנויים לרוחב) -->
+  <div class="rotate-overlay" id="rotateOverlay">
+    <div class="ro-stars"><span>⭐</span><span>✨</span><span>🌟</span><span>⭐</span><span>✨</span><span>💫</span></div>
+    <div class="ro-scene">
+      <svg class="ro-arrow" viewBox="0 0 250 250" aria-hidden="true">
+        <path d="M 125 22 A 103 103 0 1 1 30 85" fill="none" stroke="#ff8fab" stroke-width="12"
+              stroke-linecap="round" stroke-dasharray="2 22"/>
+        <path d="M 14 74 L 32 104 L 50 72 Z" fill="#ff8fab"/>
+      </svg>
+      <div class="ro-phone"><span class="ro-screen">🚗</span></div>
+      <span class="mascot-avatar ro-mascot" id="rotateMascot"></span>
+    </div>
+    <p class="ro-title">הופה! מסובבים את הטלפון</p>
+    <p class="ro-sub">ככה המשחק הרבה יותר גדול וכיף</p>
+  </div>
+
   <div id="confettiLayer" class="confetti-layer"></div>
 
   <script src="js/audio.js"></script>
   <script src="js/characters.js"></script>
+  <script src="js/brandlogos.js"></script>
   <script src="js/cars.js"></script>
   <script src="js/songs.js"></script>
   <script src="js/kidmode.js"></script>
+  <script src="js/timer.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/eggs.js"></script>
   <script src="js/city.js"></script>
   <script src="js/garage.js"></script>
   <script src="js/games/carwash.js"></script>

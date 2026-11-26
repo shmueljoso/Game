@@ -58,7 +58,7 @@ GAMES.traffic = {
       Speech.say(now.word);
       this.root.querySelector("#trWalker").classList.toggle("waving", now.color === "red");
       i++;
-      this.timer = setTimeout(step, now.ms());
+      this.timer = App.later(step, now.ms());
     };
     step();
   },
@@ -89,7 +89,7 @@ GAMES.traffic = {
     if (this.steps >= this.goal) {
       clearTimeout(this.timer);
       Sound.play("honk");
-      setTimeout(() => App.finishGame("הגעתם בבטחה"), 800);
+      App.later(() => App.finishGame("הגעתם בבטחה"), 800);
     }
   },
 

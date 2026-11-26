@@ -1,11 +1,11 @@
 /* סופרמרקט: שמים בעגלה בדיוק כמה שביקשו - לימוד ספירה עד חמש */
 
 const MARKET_ITEMS = [
-  { emoji: "🍎", name: "תפוחים" },
-  { emoji: "🍌", name: "בננות" },
-  { emoji: "🥕", name: "גזרים" },
-  { emoji: "🍇", name: "ענבים" },
-  { emoji: "🍞", name: "לחמים" },
+  { emoji: "🍎", name: "תפוחים", one: "תפוח אחד" },
+  { emoji: "🍌", name: "בננות", one: "בננה אחת" },
+  { emoji: "🥕", name: "גזרים", one: "גזר אחד" },
+  { emoji: "🍇", name: "אשכולות ענבים", one: "אשכול ענבים אחד" },
+  { emoji: "🍞", name: "כיכרות לחם", one: "כיכר לחם אחת" },
 ];
 
 GAMES.market = {
@@ -63,7 +63,8 @@ GAMES.market = {
     this.root.querySelector("#mkCartItems").innerHTML = "";
     this.paint();
     this.paintDots();
-    App.saySpeech(this.root, `שימו ${this.need} ${this.item.name} בעגלה`);
+    const what = this.need === 1 ? this.item.one : `${this.need} ${this.item.name}`;
+    App.saySpeech(this.root, `שימו ${what} בעגלה`);
     Sound.play("beep");
   },
 
@@ -84,15 +85,15 @@ GAMES.market = {
       this.locked = true;
       Sound.play("star");
       App.sparkleAt(this.root, 50, 70, 10);
-      App.saySpeech(this.root, `יופי! ${this.need} בדיוק`);
+      App.saySpeech(this.root, this.need === 1 ? "יופי! בדיוק!" : `יופי! ${this.need} בדיוק`);
       this.round++;
       this.paintDots();
-      setTimeout(() => this.nextRound(), 1600);
+      App.later(() => this.nextRound(), 1600);
     } else if (this.inCart > this.need) {
       this.locked = true;
       Sound.play("wrong");
       App.saySpeech(this.root, "אופס, יותר מדי! מתחילים שוב");
-      setTimeout(() => {
+      App.later(() => {
         this.inCart = 0;
         this.locked = false;
         this.root.querySelector("#mkCartItems").innerHTML = "";

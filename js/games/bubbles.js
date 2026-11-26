@@ -33,7 +33,7 @@ GAMES.bubbles = {
 
     this.paintDots();
     for (let i = 0; i < 4; i++) {
-      setTimeout(() => this.spawn(), i * 350);
+      App.later(() => this.spawn(), i * 350);
     }
     this.spawnTimer = setInterval(() => this.spawn(), 1400);
   },
@@ -73,14 +73,14 @@ GAMES.bubbles = {
     App.sparkleAt(this.root, xPct, yPct, 8);
     Speech.say(color.name);
 
-    setTimeout(() => bubble.remove(), 160);
+    App.later(() => bubble.remove(), 160);
 
     this.pops++;
     this.paintDots();
     if (this.pops % this.goal === 0) {
-      setTimeout(() => App.finishGame("כל הכבוד על כל הבועות"), 300);
+      App.later(() => App.finishGame("כל הכבוד על כל הבועות"), 300);
     } else {
-      setTimeout(() => this.spawn(), 120);
+      App.later(() => this.spawn(), 120);
     }
   },
 

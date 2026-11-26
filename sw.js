@@ -1,7 +1,7 @@
 /* Service worker: שומר את כל המשחק במטמון כדי שיעבוד גם בלי אינטרנט
    ויהיה אפשר להתקין אותו כאפליקציה */
 
-const CACHE = "little-city-v4";
+const CACHE = "little-city-v7";
 
 const ASSETS = [
   "./",
@@ -9,8 +9,10 @@ const ASSETS = [
   "./css/style.css",
   "./js/audio.js",
   "./js/characters.js",
+  "./js/brandlogos.js",
   "./js/cars.js",
   "./js/app.js",
+  "./js/eggs.js",
   "./js/city.js",
   "./js/garage.js",
   "./js/boot.js",
@@ -33,8 +35,17 @@ const ASSETS = [
   "./js/games/bigcolors.js",
   "./js/songs.js",
   "./js/kidmode.js",
+  "./js/timer.js",
   "./logos/logos.json",
   "./songs/songs.json",
+  "./cars/toyota.webp",
+  "./cars/mazda.webp",
+  "./cars/hyundai.webp",
+  "./cars/skoda.webp",
+  "./cars/honda.webp",
+  "./cars/geely.webp",
+  "./cars/byd.webp",
+  "./cars/jeep.webp",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
   "./icons/icon-maskable-512.png",

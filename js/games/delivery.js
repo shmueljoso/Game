@@ -73,7 +73,7 @@ GAMES.delivery = {
 
     if (target.dataset.color !== spec.key) {
       target.classList.add("shake");
-      setTimeout(() => target.classList.remove("shake"), 400);
+      App.later(() => target.classList.remove("shake"), 400);
       Sound.play("wrong");
       App.saySpeech(this.root, "זה לא הצבע המתאים");
       return false;
@@ -81,7 +81,7 @@ GAMES.delivery = {
 
     node.classList.add("delivered");
     target.classList.add("got-mail");
-    setTimeout(() => target.classList.remove("got-mail"), 700);
+    App.later(() => target.classList.remove("got-mail"), 700);
     Sound.play("pop");
     Sound.play("star");
     this.delivered++;
@@ -97,7 +97,7 @@ GAMES.delivery = {
     );
     Speech.say(spec.name);
 
-    setTimeout(() => this.nextParcel(), 800);
+    App.later(() => this.nextParcel(), 800);
     return true;
   },
 

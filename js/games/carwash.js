@@ -59,7 +59,7 @@ GAMES.carwash = {
     root.querySelector("#cwSwap").addEventListener("click", (e) => {
       e.stopPropagation();
       Sound.play("click");
-      Garage.open();
+      Garage.open("carwash");
     });
 
     const sponge = root.querySelector("#cwSponge");
@@ -109,7 +109,7 @@ GAMES.carwash = {
       App.popNumber(this.root, xPct, yPct, this.cleaned);
       this.root.querySelector("#cwCounter").textContent = `${this.cleaned} מתוך ${this.spots.length}`;
 
-      if (this.cleaned === this.spots.length) setTimeout(() => this.rinse(), 500);
+      if (this.cleaned === this.spots.length) App.later(() => this.rinse(), 500);
     });
   },
 
@@ -122,7 +122,7 @@ GAMES.carwash = {
       b.style.width = b.style.height = randBetween(8, 18) + "px";
       b.style.animationDelay = Math.random() * 0.2 + "s";
       this.root.appendChild(b);
-      setTimeout(() => b.remove(), 1100);
+      App.later(() => b.remove(), 1100);
     }
   },
 
@@ -140,19 +140,19 @@ GAMES.carwash = {
       d.style.left = randBetween(14, 86) + "%";
       d.style.animationDuration = randBetween(0.5, 0.9) + "s";
       root.appendChild(d);
-      setTimeout(() => d.remove(), 1000);
+      App.later(() => d.remove(), 1000);
       if (++drops % 6 === 0) Sound.play("water");
     }, 60);
 
-    setTimeout(() => {
+    App.later(() => {
       clearInterval(this.dropTimer);
       root.classList.remove("rinsing");
       root.classList.add("shiny");
       Sound.play("sparkle");
       for (let i = 0; i < 6; i++) {
-        setTimeout(() => App.sparkleAt(root, randBetween(24, 76), randBetween(35, 70), 5), i * 140);
+        App.later(() => App.sparkleAt(root, randBetween(24, 76), randBetween(35, 70), 5), i * 140);
       }
-      setTimeout(() => App.finishGame("המכונית נוצצת"), 900);
+      App.later(() => App.finishGame("המכונית נוצצת"), 900);
     }, 2200);
   },
 

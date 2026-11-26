@@ -73,18 +73,18 @@ GAMES.zoo = {
     if (animal.emoji !== this.target.emoji) {
       card.classList.add("wrong");
       Sound.play("wrong");
-      setTimeout(() => card.classList.remove("wrong"), 500);
+      App.later(() => card.classList.remove("wrong"), 500);
       return;
     }
 
     this.locked = true;
     card.classList.add("correct");
     animal.sound();
-    setTimeout(() => Speech.say(animal.name), 450);
+    App.later(() => Speech.say(animal.name), 450);
     App.sparkleAt(this.root, 50, 55, 10);
     this.round++;
     this.paintDots();
-    setTimeout(() => {
+    App.later(() => {
       Sound.play("star");
       this.nextRound();
     }, 1400);

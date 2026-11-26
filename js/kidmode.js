@@ -69,6 +69,12 @@ const KidMode = {
       /* דפדפנים מסוימים לא מרשים מסך מלא - שאר ההגנות עדיין פועלות */
     }
     this.requestWakeLock();
+    /* במסך מלא אפשר לנעול את הטלפון לרוחב */
+    try {
+      if (screen.orientation && screen.orientation.lock) await screen.orientation.lock("landscape");
+    } catch (e) {
+      /* לא כל המכשירים מרשים לנעול כיוון */
+    }
   },
 
   async disable(systemExit) {

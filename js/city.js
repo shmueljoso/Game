@@ -45,20 +45,30 @@ const City = {
         </defs>
 
         <g class="world" id="cityWorld">
-          <rect x="-60" y="-60" width="3120" height="720" fill="url(#sky)"/>
+          <rect x="-60" y="-60" width="3120" height="720" fill="url(#sky)" data-egg="ground"/>
+          <text class="plane" font-size="40" data-egg="plane">✈️</text>
 
-          <g class="sun-group">
+          <g class="sun-group" data-egg="sun">
             <circle r="120" fill="url(#sunGlow)"/>
             <g class="sun-rays">
               ${Array.from({ length: 12 }, (_, i) =>
                 `<rect x="-5" y="-86" width="10" height="28" rx="5" fill="#ffe27a" opacity="0.9" transform="rotate(${i * 30})"/>`
               ).join("")}
             </g>
-            <circle r="44" fill="#ffd93d"/>
-            <circle r="44" fill="#fff3a8" opacity="0.45"/>
+            <g class="egg-body">
+              <circle r="44" fill="#ffd93d"/>
+              <circle r="44" fill="#fff3a8" opacity="0.45"/>
+              <g class="sun-eyes">
+                <ellipse cx="-14" cy="-8" rx="5" ry="7" fill="#7a4a12"/>
+                <ellipse cx="14" cy="-8" rx="5" ry="7" fill="#7a4a12"/>
+              </g>
+              <circle cx="-26" cy="8" r="7" fill="#ff9e7a" opacity="0.6"/>
+              <circle cx="26" cy="8" r="7" fill="#ff9e7a" opacity="0.6"/>
+              <path d="M-14 12 Q0 26 14 12" stroke="#7a4a12" stroke-width="4" fill="none" stroke-linecap="round"/>
+            </g>
           </g>
 
-          <g class="rainbow" opacity="0.4">
+          <g class="rainbow" data-egg="rainbow" opacity="0.4">
             ${["#ff8a8a", "#ffc46b", "#ffe86b", "#8fe08f", "#8fc9ff", "#c9a3ff"].map(
               (c, i) => `<path d="M 150 318 A 200 200 0 0 1 550 318" fill="none" stroke="${c}"
                            stroke-width="10" transform="translate(0 ${i * 10})"/>`
@@ -72,7 +82,8 @@ const City = {
           ${cloud(2260, 100, 1.05)} ${cloud(2760, 74, 0.9)}
           ${balloons(2620, 156)}
 
-          <g class="birds">
+          <g class="birds" data-egg="birds">
+            <rect x="-10" y="-20" width="92" height="56" fill="transparent"/>
             <path d="M0 0 q9 -9 18 0 q9 -9 18 0" stroke="#5b6b7a" stroke-width="3" fill="none" stroke-linecap="round"/>
             <path d="M44 26 q7 -7 14 0 q7 -7 14 0" stroke="#5b6b7a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
           </g>
@@ -80,10 +91,10 @@ const City = {
           <path d="M-60 330 Q 120 250 300 318 Q 470 250 640 312 Q 820 248 1000 322
                    Q 1180 252 1360 316 Q 1540 250 1720 314 Q 1900 250 2060 320
                    Q 2240 252 2420 316 Q 2600 250 2780 314 Q 2940 252 3060 320
-                   L3060 620 L-60 620 Z" fill="url(#hillBack)"/>
+                   L3060 620 L-60 620 Z" fill="url(#hillBack)" data-egg="ground"/>
           <path d="M-60 356 Q 200 300 420 352 Q 660 300 1000 358
                    Q 1300 302 1560 356 Q 1820 300 2060 358
-                   Q 2320 302 2580 356 Q 2840 300 3060 358 L3060 620 L-60 620 Z" fill="url(#grass)"/>
+                   Q 2320 302 2580 356 Q 2840 300 3060 358 L3060 620 L-60 620 Z" fill="url(#grass)" data-egg="ground"/>
 
           <path d="${ROAD_PATH}" fill="none" stroke="#5d5d69" stroke-width="66" stroke-linecap="round"/>
           <path d="${ROAD_PATH}" fill="none" stroke="#72727f" stroke-width="58" stroke-linecap="round"/>
@@ -94,7 +105,7 @@ const City = {
             <ellipse cx="1500" cy="564" rx="118" ry="27" fill="url(#pond)"/>
             <ellipse class="ripple" cx="1478" cy="562" rx="18" ry="6" fill="none" stroke="#ffffff" stroke-width="2.5" opacity="0.7"/>
             <ellipse class="ripple r2" cx="1524" cy="568" rx="14" ry="5" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.6"/>
-            <text x="1470" y="560" font-size="26">🦆</text>
+            <g data-egg="duck"><g class="egg-body"><text x="1470" y="560" font-size="30">🦆</text></g></g>
           </g>
 
           ${tree(330, 250, 0.72)} ${tree(660, 248, 0.7)} ${tree(980, 252, 0.72)}
@@ -108,6 +119,8 @@ const City = {
           ${flowers(2140, 470)} ${flowers(2860, 466)}
           ${lamp(340, 424)} ${lamp(1040, 420)} ${lamp(1700, 424)} ${lamp(2320, 424)} ${lamp(2760, 420)}
           ${bench(640, 556)} ${bench(1340, 556)} ${bench(2260, 556)} ${bench(2740, 556)}
+          ${butterfly(120, 450, 0)} ${butterfly(1120, 440, 3)} ${butterfly(2180, 450, 6)}
+          <g id="eggLayer"></g>
 
           <g id="hotspots"></g>
         </g>
@@ -152,11 +165,18 @@ const City = {
       const car = document.createElementNS("http://www.w3.org/2000/svg", "text");
       car.setAttribute("font-size", "30");
       car.setAttribute("class", "road-car");
+      car.dataset.egg = "car";
       car.textContent = emoji;
       car.style.offsetPath = `path("${ROAD_PATH}")`;
       car.style.animationDuration = 26 + i * 8 + "s";
       car.style.animationDelay = -i * 7 + "s";
       stage.querySelector("#cityWorld").appendChild(car);
+    });
+
+    stage.querySelector("#cityWorld").addEventListener("click", (e) => {
+      if (e.target.closest(".hotspot")) return;
+      const target = e.target.closest("[data-egg]");
+      if (target) Eggs.hit(target.dataset.egg, target, e);
     });
 
     document.getElementById("cityNext").addEventListener("click", () => this.go(this.area + 1));
@@ -405,52 +425,54 @@ const BUILDINGS = {
 
 function cloud(x, y, scale) {
   return `
-    <g class="cloud">
-      <g transform="translate(${x},${y}) scale(${scale})">
+    <g class="cloud" data-egg="cloud">
+      <g transform="translate(${x},${y}) scale(${scale})"><g class="egg-body">
         <ellipse cx="0" cy="0" rx="46" ry="27" fill="#ffffff"/>
         <ellipse cx="36" cy="9" rx="34" ry="21" fill="#ffffff"/>
         <ellipse cx="-34" cy="9" rx="30" ry="19" fill="#ffffff"/>
         <ellipse cx="4" cy="-14" rx="26" ry="18" fill="#ffffff"/>
-      </g>
+      </g></g>
     </g>`;
 }
 
 function tree(x, y, scale) {
   return `
-    <g class="tree" transform="translate(${x},${y}) scale(${scale})">
+    <g class="tree" data-egg="tree" transform="translate(${x},${y}) scale(${scale})"><g class="egg-body">
       <rect x="-8" y="-30" width="16" height="38" rx="7" fill="#8b5a2b"/>
       <circle cx="0" cy="-56" r="34" fill="#4aa85c"/>
       <circle cx="-24" cy="-38" r="23" fill="#5cbd6c"/>
       <circle cx="24" cy="-38" r="23" fill="#3f9a52"/>
       <circle cx="-9" cy="-70" r="18" fill="#63c473" opacity="0.9"/>
-    </g>`;
+    </g></g>`;
 }
 
 function flowers(x, y) {
   return `
-    <g transform="translate(${x},${y})">
+    <g data-egg="flowers" transform="translate(${x},${y})"><g class="egg-body">
+      <rect x="-12" y="-14" width="78" height="32" fill="transparent"/>
       ${[0, 26, 52].map(
         (dx, i) => `<g transform="translate(${dx},${i % 2 ? 8 : 0})">
             <circle r="6" fill="${["#ff8fab", "#ffd93d", "#c9a3ff"][i]}"/>
             <circle r="2.4" fill="#fff8d8"/>
           </g>`
       ).join("")}
-    </g>`;
+    </g></g>`;
 }
 
 function lamp(x, y) {
   return `
-    <g transform="translate(${x},${y})">
+    <g class="lamp" data-egg="lamp" transform="translate(${x},${y})">
+      <rect x="-12" y="-100" width="40" height="100" fill="transparent"/>
       <rect x="-3" y="-72" width="6" height="72" rx="3" fill="#6d7a86"/>
       <path d="M-3 -72 Q-3 -86 12 -86" stroke="#6d7a86" stroke-width="6" fill="none" stroke-linecap="round"/>
-      <circle cx="14" cy="-82" r="9" fill="#ffe9a8"/>
-      <circle cx="14" cy="-82" r="16" fill="#ffe9a8" opacity="0.25"/>
+      <circle class="lamp-light" cx="14" cy="-82" r="9" fill="#ffe9a8"/>
+      <circle class="lamp-light" cx="14" cy="-82" r="16" fill="#ffe9a8" opacity="0.25"/>
     </g>`;
 }
 
 function fountain(x, y) {
   return `
-    <g transform="translate(${x},${y})">
+    <g data-egg="fountain" transform="translate(${x},${y})">
       <ellipse cx="0" cy="8" rx="72" ry="22" fill="#cfd8e0"/>
       <ellipse cx="0" cy="4" rx="62" ry="17" fill="#8fd8f5"/>
       <rect x="-7" y="-40" width="14" height="44" rx="7" fill="#cfd8e0"/>
@@ -465,7 +487,7 @@ function fountain(x, y) {
 
 function bench(x, y) {
   return `
-    <g transform="translate(${x},${y})">
+    <g data-egg="bench" transform="translate(${x},${y})">
       <rect x="-30" y="-16" width="60" height="8" rx="4" fill="#b5813f"/>
       <rect x="-30" y="-30" width="60" height="7" rx="3.5" fill="#c99457"/>
       <rect x="-24" y="-8" width="6" height="14" rx="3" fill="#8b5a2b"/>
@@ -475,7 +497,7 @@ function bench(x, y) {
 
 function balloons(x, y) {
   return `
-    <g class="balloons" transform="translate(${x},${y})">
+    <g class="balloons" data-egg="balloons" transform="translate(${x},${y})"><g class="egg-body">
       ${[
         { dx: 0, dy: 0, c: "#ff8fab" },
         { dx: 34, dy: 18, c: "#ffd93d" },
@@ -486,13 +508,21 @@ function balloons(x, y) {
             <path d="M0 25 q6 20 -2 40" stroke="#ffffff" stroke-width="2" fill="none" opacity="0.8"/>
           </g>`
       ).join("")}
-    </g>`;
+    </g></g>`;
 }
 
 function kite(x, y) {
   return `
-    <g class="kite" transform="translate(${x},${y})">
+    <g class="kite" data-egg="kite" transform="translate(${x},${y})"><g class="egg-body">
       <path d="M0 -26 L22 0 L0 30 L-22 0 Z" fill="#ff8fab" stroke="#ffffff" stroke-width="2"/>
       <path d="M0 30 q10 18 -4 28 q14 10 2 26" stroke="#ffffff" stroke-width="2.5" fill="none"/>
+    </g></g>`;
+}
+
+/* פרפר שמתעופף כל הזמן מעל הפרחים */
+function butterfly(x, y, delay) {
+  return `
+    <g transform="translate(${x},${y})">
+      <text class="butterfly" font-size="26" style="animation-delay:-${delay}s">🦋</text>
     </g>`;
 }

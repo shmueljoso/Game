@@ -66,7 +66,7 @@ GAMES.bigcolors = {
     this.taps++;
     this.paintDots();
     if (this.taps % this.goal === 0) {
-      setTimeout(() => App.finishGame("איזה יופי של צבעים"), 500);
+      App.later(() => App.finishGame("איזה יופי של צבעים"), 500);
     }
   },
 

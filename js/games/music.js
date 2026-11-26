@@ -57,7 +57,7 @@ GAMES.music = {
     this.step = 0;
     this.paintDots();
     App.saySpeech(this.root, "תקשיבו...");
-    this.timers.push(setTimeout(() => this.playSequence(), 900));
+    this.timers.push(App.later(() => this.playSequence(), 900));
   },
 
   playSequence() {
@@ -65,11 +65,11 @@ GAMES.music = {
     this.step = 0;
     this.sequence.forEach((key, i) => {
       this.timers.push(
-        setTimeout(() => {
+        App.later(() => {
           this.hit(key, false);
           if (i === this.sequence.length - 1) {
             this.timers.push(
-              setTimeout(() => {
+              App.later(() => {
                 this.locked = false;
                 App.saySpeech(this.root, "עכשיו אתם!");
               }, 600)
@@ -103,11 +103,11 @@ GAMES.music = {
 
     if (key !== this.sequence[this.step]) {
       btn.classList.add("wrong");
-      setTimeout(() => btn.classList.remove("wrong"), 500);
+      App.later(() => btn.classList.remove("wrong"), 500);
       Sound.play("wrong");
       this.locked = true;
       App.saySpeech(this.root, "כמעט! מקשיבים שוב");
-      this.timers.push(setTimeout(() => this.playSequence(), 1000));
+      this.timers.push(App.later(() => this.playSequence(), 1000));
       return;
     }
 
@@ -119,7 +119,7 @@ GAMES.music = {
       Sound.play("star");
       App.sparkleAt(this.root, 50, 45, 10);
       App.saySpeech(this.root, "יפה מאוד!");
-      this.timers.push(setTimeout(() => this.nextRound(), 1400));
+      this.timers.push(App.later(() => this.nextRound(), 1400));
     }
   },
 
