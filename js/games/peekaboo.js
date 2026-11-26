@@ -69,9 +69,9 @@ GAMES.peekaboo = {
     this.paintDots();
 
     if (this.reveals % this.goal === 0) {
-      this.timer = setTimeout(() => App.finishGame("מצאתם את כולם"), 1300);
+      this.timer = App.later(() => App.finishGame("מצאתם את כולם"), 1300);
     } else {
-      this.timer = setTimeout(() => this.nextItem(), 1600);
+      this.timer = App.later(() => this.nextItem(), 1600);
     }
   },
 

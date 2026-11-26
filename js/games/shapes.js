@@ -83,7 +83,7 @@ GAMES.shapes = {
 
     if (target.dataset.shape !== spec.type.key) {
       target.classList.add("shake");
-      setTimeout(() => target.classList.remove("shake"), 400);
+      App.later(() => target.classList.remove("shake"), 400);
       Sound.play("wrong");
       App.saySpeech(this.root, "זה לא מתאים, נסו שוב");
       return false;
@@ -91,7 +91,7 @@ GAMES.shapes = {
 
     node.classList.add("sunk");
     target.classList.add("filled");
-    setTimeout(() => target.classList.remove("filled"), 600);
+    App.later(() => target.classList.remove("filled"), 600);
     Sound.play("pop");
     Sound.play("star");
     this.done++;
@@ -106,7 +106,7 @@ GAMES.shapes = {
       7
     );
 
-    setTimeout(() => this.nextShape(), 700);
+    App.later(() => this.nextShape(), 700);
     return true;
   },
 

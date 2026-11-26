@@ -1,7 +1,7 @@
 /* Service worker: שומר את כל המשחק במטמון כדי שיעבוד גם בלי אינטרנט
    ויהיה אפשר להתקין אותו כאפליקציה */
 
-const CACHE = "little-city-v4";
+const CACHE = "little-city-v5";
 
 const ASSETS = [
   "./",

@@ -37,6 +37,15 @@ const COINS_PER_WIN = 3;
 const App = {
   profile: null,
   currentGame: null,
+  run: 0,
+
+  /* setTimeout של משחק: מתבטל לבד כשיוצאים מהמשחק או מתחילים אותו מחדש */
+  later(fn, ms) {
+    const run = this.run;
+    return setTimeout(() => {
+      if (this.run === run) fn();
+    }, ms);
+  },
 
   /* ---------- פרופיל ---------- */
   loadProfile() {
@@ -161,6 +170,7 @@ const App = {
     }
     document.getElementById("winOverlay").classList.add("hidden");
     this.currentGame = null;
+    this.run++;
   },
 
   replayGame() {

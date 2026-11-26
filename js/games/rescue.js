@@ -77,13 +77,13 @@ GAMES.rescue = {
     Sound.play("pop");
     Sound.play("sparkle");
     App.sparkleAt(this.root, ((c.x - rootRect.left) / rootRect.width) * 100, ((c.y - rootRect.top) / rootRect.height) * 100, 6);
-    App.saySpeech(this.root, `${hit.part} הבריאה!`);
+    App.saySpeech(this.root, `פלסטר על ${hit.part}!`);
     this.root.querySelector("#rcCounter").textContent = `${this.healed} מתוך 4`;
     this.heart();
 
     if (this.healed === 4) {
       this.root.querySelector("#rcPatient").classList.add("happy");
-      setTimeout(() => App.finishGame("ריפאתם את דובי"), 1200);
+      App.later(() => App.finishGame("ריפאתם את דובי"), 1200);
     }
     return true;
   },
@@ -92,7 +92,7 @@ GAMES.rescue = {
     const h = el("span", "float-heart", "💗");
     h.style.left = randBetween(35, 65) + "%";
     this.root.appendChild(h);
-    setTimeout(() => h.remove(), 1600);
+    App.later(() => h.remove(), 1600);
   },
 
   stop() {},

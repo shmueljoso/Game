@@ -47,7 +47,8 @@ function bindUI() {
 
   document.getElementById("garageBack").addEventListener("click", () => {
     Sound.play("click");
-    App.goCity();
+    if (Garage.returnTo) App.openGame(Garage.returnTo);
+    else App.goCity();
   });
 
   document.getElementById("backBtn").addEventListener("click", () => {

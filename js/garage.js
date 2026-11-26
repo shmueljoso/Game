@@ -1,7 +1,11 @@
 /* המוסך: בוחרים באיזה רכב לשחק, וקונים רכבים חדשים במטבעות שנאספו */
 
 const Garage = {
-  open() {
+  returnTo: null,
+
+  /* returnTo - המשחק שממנו הגיעו, כדי שכפתור החזרה יחזור אליו עם הרכב החדש */
+  open(returnTo = null) {
+    this.returnTo = returnTo;
     App.showScreen("garage");
     App.paintProfile();
     this.render();

@@ -614,25 +614,28 @@ html, body {
 /* ===== כבאות ===== */
 .fire-sky { position: absolute; inset: 0 0 26% 0; background: linear-gradient(#46648c, #86a8cc); }
 .fire-ground { position: absolute; inset: 74% 0 0 0; background: linear-gradient(#6f6f7a, #55555f); }
-.fire-house { position: absolute; left: 50%; top: 48%; transform: translate(-50%, -50%); width: 46%; }
+.fire-house { position: absolute; left: 46%; top: 46%; transform: translate(-50%, -50%); width: calc(var(--u) * 60); }
 .house-roof {
   width: 0; height: 0; margin: 0 auto;
-  border-inline: calc(var(--u) * 24) solid transparent;
-  border-bottom: calc(var(--u) * 12) solid #b4472f;
+  border-inline: calc(var(--u) * 30) solid transparent;
+  border-bottom: calc(var(--u) * 14) solid #b4472f;
 }
 .house-body {
   background: #f2dcc0;
   height: calc(var(--u) * 26);
   border-radius: calc(var(--u) * 1.5);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  gap: calc(var(--u) * 3);
+  gap: calc(var(--u) * 12);
+  padding-top: calc(var(--u) * 4);
+  box-sizing: border-box;
   position: relative;
 }
 .house-window {
   width: calc(var(--u) * 7); height: calc(var(--u) * 7);
   background: #7fc4ff; border: calc(var(--u) * 0.6) solid #c69a6a; border-radius: calc(var(--u) * 1);
+  position: relative;
 }
 .house-door {
   position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
@@ -654,11 +657,15 @@ html, body {
 }
 .flame.out { opacity: 0; transform: translate(-50%, -50%) scale(0.2); animation: none; }
 
+/* המשאית מימין ופונה שמאלה אל הבית - כך היא לא מתחבאת מאחורי המונה */
 .fire-truck {
-  position: absolute; left: 6%; bottom: 8%;
+  position: absolute; right: 4%; bottom: 6%;
   font-size: calc(var(--u) * 13); z-index: 5;
-  transform: scaleX(-1);
-  animation: truckIn 1s ease-out;
+  animation: fireTruckIn 1s ease-out;
+}
+@keyframes fireTruckIn {
+  from { transform: translateX(140%); }
+  to { transform: translateX(0); }
 }
 @keyframes truckIn {
   from { transform: translateX(-140%) scaleX(-1); }
@@ -676,7 +683,7 @@ html, body {
   opacity: 0.85;
 }
 .nozzle {
-  position: absolute; left: 50%; top: 60%;
+  position: absolute; left: 78%; top: 62%;
   transform: translate(-50%, -50%);
   font-size: calc(var(--u) * 7); z-index: 8; pointer-events: none;
 }
@@ -709,18 +716,25 @@ html, body {
   100% { opacity: 0; transform: translate(calc(-50% + var(--dx)), -200%) scale(1.6); }
 }
 
+/* החתול מחכה בחלון ורועד מפחד, ובסוף קופץ החוצה אל הכבאים */
 .rescue-cat {
   position: absolute;
-  top: calc(var(--u) * -8);
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: calc(var(--u) * 9);
-  animation: catHop 0.6s ease infinite alternate;
-  z-index: 6;
+  left: 50%; top: 55%;
+  transform: translate(-50%, -50%);
+  font-size: calc(var(--u) * 6);
+  line-height: 1;
+  animation: catShiver 0.25s ease-in-out infinite alternate;
+  z-index: 5;
 }
-@keyframes catHop {
-  from { transform: translateX(-50%) translateY(0); }
-  to { transform: translateX(-50%) translateY(calc(var(--u) * -1.5)); }
+@keyframes catShiver {
+  from { transform: translate(-56%, -50%) rotate(-4deg); }
+  to { transform: translate(-44%, -50%) rotate(4deg); }
+}
+.rescue-cat.saved { animation: catJump 1.1s ease-in-out forwards; z-index: 9; }
+@keyframes catJump {
+  0% { transform: translate(-50%, -50%) scale(1); }
+  40% { transform: translate(-50%, calc(-50% - var(--u) * 12)) scale(1.5); }
+  100% { transform: translate(calc(-50% + var(--u) * 16), calc(-50% + var(--u) * 20)) scale(1.7); }
 }
 
 /* ===== גן חיות ===== */

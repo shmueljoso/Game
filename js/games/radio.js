@@ -104,7 +104,7 @@ GAMES.radio = {
     const note = el("span", "float-note", ["🎵", "🎶", "🎼"][Math.floor(Math.random() * 3)]);
     note.style.left = randBetween(30, 70) + "%";
     this.root.appendChild(note);
-    setTimeout(() => note.remove(), 1600);
+    App.later(() => note.remove(), 1600);
   },
 
   paint() {

@@ -80,7 +80,7 @@ GAMES.race = {
     const box = this.root.querySelector("#countdown");
     const steps = ["3", "2", "1", "צאו!"];
     steps.forEach((s, i) => {
-      const t = setTimeout(() => {
+      const t = App.later(() => {
         box.textContent = s;
         box.classList.remove("beat");
         void box.offsetWidth;
@@ -135,7 +135,7 @@ GAMES.race = {
     const puff = el("span", "dust");
     puff.style.left = `calc(${this.player}% * 0.86)`;
     this.root.querySelector("#lane0").appendChild(puff);
-    setTimeout(() => puff.remove(), 520);
+    App.later(() => puff.remove(), 520);
   },
 
   finish(playerWon) {
@@ -150,7 +150,7 @@ GAMES.race = {
     badge.classList.remove("hidden");
     badge.textContent = playerWon ? "🏆 מקום ראשון!" : "💪 כמעט!";
 
-    setTimeout(() => {
+    App.later(() => {
       App.finishGame(playerWon ? "ניצחתם במרוץ" : "מרוץ מעולה");
     }, 800);
   },

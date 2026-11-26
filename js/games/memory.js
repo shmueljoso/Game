@@ -65,7 +65,7 @@ GAMES.memory = {
       Speech.say("מצאתם זוג!");
 
       if (this.found === this.pairs) {
-        setTimeout(() => App.finishGame("מצאתם את כל הזוגות"), 900);
+        App.later(() => App.finishGame("מצאתם את כל הזוגות"), 900);
       }
       return;
     }
@@ -75,7 +75,7 @@ GAMES.memory = {
     const other = this.first;
     this.first = null;
     Sound.play("wrong");
-    setTimeout(() => {
+    App.later(() => {
       other.classList.remove("open");
       card.classList.remove("open");
       this.locked = false;

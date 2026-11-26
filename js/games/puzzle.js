@@ -33,7 +33,7 @@ GAMES.puzzle = {
     root.querySelector("#pzSwap").addEventListener("click", (e) => {
       e.stopPropagation();
       Sound.play("click");
-      Garage.open();
+      Garage.open("puzzle");
     });
 
     const tray = root.querySelector("#pzTray");
@@ -83,7 +83,7 @@ GAMES.puzzle = {
 
     if (this.placed === 4) {
       this.root.querySelector("#pzBoard").classList.add("solved");
-      setTimeout(() => App.finishGame("הרכבתם את הרכב"), 1000);
+      App.later(() => App.finishGame("הרכבתם את הרכב"), 1000);
     }
     return true;
   },
