@@ -1739,7 +1739,7 @@ body.kid-mode { overscroll-behavior: none; }
   position: absolute;
   inset: 13% 6% 7%;
   display: grid;
-  grid-template-columns: repeat(4, calc(var(--u) * 16.5));
+  grid-template-columns: repeat(4, calc(var(--u) * 21));
   gap: calc(var(--u) * 2);
   justify-content: center;
   align-content: center;
@@ -1751,7 +1751,7 @@ body.kid-mode { overscroll-behavior: none; }
   background: #ffffff;
   box-shadow: var(--shadow);
   cursor: pointer;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 4 / 3;
   animation: dropIn 0.5s ease backwards;
   overflow: hidden;
 }
@@ -1768,6 +1768,9 @@ body.kid-mode { overscroll-behavior: none; }
 .mem-card.open .mem-back { opacity: 0; transform: rotateY(90deg); }
 .mem-card.open .mem-face { opacity: 1; transform: rotateY(0); }
 .mem-card.done { background: #d8ffd0; animation: pop 0.5s ease; }
+.mem-car { position: relative; width: 100%; height: 100%; display: block; }
+.mem-logo { position: absolute; top: 6%; left: 50%; width: 44%; transform: translateX(-50%); }
+.mem-photo { position: absolute; bottom: 4%; left: 5%; width: 90%; height: 46%; object-fit: contain; }
 
 /* ===== ציור ===== */
 .paint-canvas {
