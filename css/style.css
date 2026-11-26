@@ -1962,9 +1962,12 @@ body.timer-on .area-name { display: none; }
 }
 
 .timer-card h2 { margin: 0 0 6px; }
-.timer-choices { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin: 12px 0; }
+.timer-choices {
+  display: grid; grid-template-columns: repeat(5, 58px); gap: 8px;
+  justify-content: center; margin: 10px 0;
+}
 .timer-choice {
-  width: 64px; height: 64px; border: none; border-radius: 18px;
+  width: 58px; height: 58px; border: none; border-radius: 18px;
   background: linear-gradient(#fff6c9, #ffe17a); box-shadow: 0 4px 0 #e0b100;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   font-family: inherit; color: #6b4a00; cursor: pointer;

@@ -2,7 +2,15 @@
    ובסוף מסך "זהו להיום" שרק מבוגר יכול לסגור (בלחיצה ארוכה) */
 
 const TIMER_KEY = "kidsGameTimer";
-const TIMER_CHOICES = [1, 3, 5, 10, 15];
+const TIMER_CHOICES = [0.5, 1, 2, 3, 5, 10, 15, 20, 30];
+
+/* איך כותבים ואומרים כל משך זמן בעברית */
+function timerWords(m) {
+  if (m === 0.5) return { big: "½", small: "דקה", say: "חצי דקה" };
+  if (m === 1) return { big: "1", small: "דקה", say: "דקה אחת" };
+  if (m === 2) return { big: "2", small: "דקות", say: "שתי דקות" };
+  return { big: String(m), small: "דקות", say: `${m} דקות` };
+}
 const HOLD_MS = 2000;
 
 const PlayTimer = {
@@ -17,9 +25,10 @@ const PlayTimer = {
     this.panel = document.getElementById("timerPanel");
     this.endScreen = document.getElementById("timerEnd");
 
-    document.getElementById("timerChoices").innerHTML = TIMER_CHOICES.map(
-      (m) => `<button class="timer-choice" data-min="${m}"><b>${m}</b><span>${m === 1 ? "דקה" : "דקות"}</span></button>`
-    ).join("");
+    document.getElementById("timerChoices").innerHTML = TIMER_CHOICES.map((m) => {
+      const w = timerWords(m);
+      return `<button class="timer-choice" data-min="${m}"><b>${w.big}</b><span>${w.small}</span></button>`;
+    }).join("");
     this.panel.querySelectorAll(".timer-choice").forEach((b) =>
       b.addEventListener("click", () => this.start(Number(b.dataset.min)))
     );
@@ -87,7 +96,7 @@ const PlayTimer = {
     this.closePanel();
     this.run();
     Sound.play("star");
-    Speech.say(minutes === 1 ? "יש לנו דקה אחת לשחק!" : `יש לנו ${minutes} דקות לשחק!`);
+    Speech.say(`יש לנו ${timerWords(minutes).say} לשחק!`);
   },
 
   cancel() {
@@ -107,7 +116,8 @@ const PlayTimer = {
   },
 
   run() {
-    this.warned = this.endsAt - Date.now() <= 60000;
+    this.warnAt = this.total > 60000 ? 60 : 10;
+    this.warned = this.endsAt - Date.now() <= this.warnAt * 1000;
     document.body.classList.add("timer-on");
     this.chip.classList.remove("hidden");
     clearInterval(this.tick);
@@ -128,13 +138,13 @@ const PlayTimer = {
     const sec = Math.ceil(left / 1000);
     this.chip.querySelector(".tc-time").textContent = `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, "0")}`;
     this.chip.style.setProperty("--left", ((left / this.total) * 100).toFixed(1) + "%");
-    this.chip.classList.toggle("last-minute", sec <= 60);
+    this.chip.classList.toggle("last-minute", sec <= this.warnAt);
     this.chip.classList.toggle("last-seconds", sec <= 10);
 
-    if (!this.warned && sec <= 60) {
+    if (!this.warned && sec <= this.warnAt) {
       this.warned = true;
       Sound.melody(["G5", "E5", "G5"], { gap: 0.14, type: "sine", vol: 0.14 });
-      Speech.say("עוד דקה וזהו!");
+      Speech.say(this.warnAt === 60 ? "עוד דקה וזהו!" : "עוד רגע וזהו!");
     }
     if (left <= 0) this.finish();
   },
