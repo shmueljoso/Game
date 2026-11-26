@@ -6,7 +6,7 @@ const CARS = [
   { id: "toyota",  name: "טויוטה", latin: "Toyota",  say: "טויוטה",      type: "hatch",   color: "#e8443b", price: 0, photo: "cars/toyota.webp", ratio: 2.67 },
   { id: "mazda",   name: "מאזדה",  latin: "Mazda",   say: "מזדה",        type: "sedan",   color: "#2f6fd0", price: 3, photo: "cars/mazda.webp", ratio: 3.05 },
   { id: "kia",     name: "קיה",    latin: "Kia",     say: "קיה",         type: "hatch",   color: "#9b6ede", price: 5 },
-  { id: "hyundai", name: "יונדאי", latin: "Hyundai", say: "יונדאי",      type: "suv",     color: "#cdd3db", price: 7, photo: "cars/hyundai.webp", ratio: 2.69 },
+  { id: "hyundai", name: "יונדאי", latin: "Hyundai", say: "יונדאי",      type: "suv",     color: "#cdd3db", price: 7, photo: "cars/hyundai.webp", ratio: 2.69, model: "Ioniq 5" },
   { id: "skoda",   name: "סקודה",  latin: "Skoda",   say: "סקודה",       type: "wagon",   color: "#2f9e63", price: 9, photo: "cars/skoda.webp", ratio: 2.71 },
   { id: "honda",   name: "הונדה",  latin: "Honda",   say: "הונדה",       type: "sedan",   color: "#8fa3b8", price: 10, photo: "cars/honda.webp", ratio: 2.87 },
   { id: "geely",   name: "ג'ילי",  latin: "Geely",   say: "ג׳ילי",       type: "sedan",   color: "#f2921d", price: 12, photo: "cars/geely.webp", ratio: 2.58 },
