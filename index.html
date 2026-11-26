@@ -59,6 +59,7 @@
       </button>
       <div class="hud-side">
         <button class="icon-btn install-btn hidden" id="installBtn" aria-label="התקנת האפליקציה">📲</button>
+        <button class="icon-btn timer-btn" id="timerBtn" aria-label="טיימר משחק">⏰</button>
         <button class="icon-btn kid-lock" id="kidLockBtn" aria-label="מצב ילד">🔓</button>
         <button class="icon-btn" id="musicBtn" aria-label="מוזיקה">🎵</button>
       </div>
@@ -117,6 +118,34 @@
     </div>
   </div>
 
+  <!-- טיימר הורים: שעון בראש המסך, חלון בחירה ומסך סיום -->
+  <div class="timer-chip hidden" id="timerChip">
+    <span class="tc-clock">⏰</span><span class="tc-time">0:00</span>
+    <span class="tc-bar"><span></span></span>
+  </div>
+
+  <div class="win-overlay hidden" id="timerPanel">
+    <div class="win-card timer-card">
+      <h2>⏰ כמה זמן משחקים?</h2>
+      <p class="tip-text">בסוף הזמן המשחק ייעצר ויופיע מסך "זהו להיום". רק מבוגר יכול לסגור אותו - בלחיצה ארוכה.</p>
+      <div class="timer-choices" id="timerChoices"></div>
+      <button class="btn-secondary wide hidden" id="timerOff">לבטל את הטיימר</button>
+      <button class="btn-text" id="timerClose">סגירה</button>
+    </div>
+  </div>
+
+  <div class="timer-end hidden" id="timerEnd">
+    <div class="te-sky">
+      <span class="te-moon">🌙</span>
+      <span class="te-star s1">⭐</span><span class="te-star s2">✨</span><span class="te-star s3">⭐</span>
+      <span class="te-star s4">✨</span><span class="te-star s5">🌟</span>
+    </div>
+    <div class="te-mascot" id="timerEndMascot"></div>
+    <h2 class="te-title">זהו להיום! 👋</h2>
+    <p class="te-text" id="timerEndText">נתראה בפעם הבאה!</p>
+    <button class="te-btn" id="timerEndBtn"><span class="te-fill"></span><span class="te-label">🔒 להורים: החזיקו לסגירה</span></button>
+  </div>
+
   <!-- בטלפון לאורך: מסך חמוד שמבקש לסובב (המשחקים בנויים לרוחב) -->
   <div class="rotate-overlay" id="rotateOverlay">
     <div class="ro-stars"><span>⭐</span><span>✨</span><span>🌟</span><span>⭐</span><span>✨</span><span>💫</span></div>
@@ -141,6 +170,7 @@
   <script src="js/cars.js"></script>
   <script src="js/songs.js"></script>
   <script src="js/kidmode.js"></script>
+  <script src="js/timer.js"></script>
   <script src="js/app.js"></script>
   <script src="js/eggs.js"></script>
   <script src="js/city.js"></script>

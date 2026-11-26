@@ -4,7 +4,7 @@
    say - איות עברי שגורם לקול העברי להגות את השם נכון */
 const CARS = [
   { id: "toyota",  name: "טויוטה", latin: "Toyota",  say: "טויוטה",      type: "hatch",   color: "#e8443b", price: 0, photo: "cars/toyota.webp", ratio: 2.67 },
-  { id: "mazda",   name: "מאזדה",  latin: "Mazda",   say: "מזדה",        type: "sedan",   color: "#2f6fd0", price: 3 },
+  { id: "mazda",   name: "מאזדה",  latin: "Mazda",   say: "מזדה",        type: "sedan",   color: "#2f6fd0", price: 3, photo: "cars/mazda.webp", ratio: 3.05 },
   { id: "kia",     name: "קיה",    latin: "Kia",     say: "קיה",         type: "hatch",   color: "#9b6ede", price: 5 },
   { id: "hyundai", name: "יונדאי", latin: "Hyundai", say: "יונדאי",      type: "suv",     color: "#cdd3db", price: 7, photo: "cars/hyundai.webp", ratio: 2.69 },
   { id: "skoda",   name: "סקודה",  latin: "Skoda",   say: "סקודה",       type: "wagon",   color: "#2f9e63", price: 9, photo: "cars/skoda.webp", ratio: 2.71 },

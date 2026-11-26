@@ -123,6 +123,7 @@ if ("serviceWorker" in navigator) {
 document.addEventListener("DOMContentLoaded", () => {
   Speech.init();
   KidMode.init();
+  PlayTimer.init();
   Songs.loadFolder();
   Logos.load();
   App.profile = App.loadProfile();
